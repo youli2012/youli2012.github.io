@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YOULI2012</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:linear-gradient(135deg,#0f0f1a 0%,#1a1a2e 30%,#16213e 60%,#0f3460 100%);
+    background-attachment:fixed;color:#fff;overflow-x:hidden
+}
+.bg-particles{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;overflow:hidden}
+.bg-particles span{position:absolute;width:3px;height:3px;background:rgba(255,255,255,0.08);border-radius:50%;animation:floatUp linear infinite}
+.bg-particles span:nth-child(1){left:10%;animation-duration:12s;animation-delay:0s}
+.bg-particles span:nth-child(2){left:25%;animation-duration:15s;animation-delay:2s;width:2px;height:2px}
+.bg-particles span:nth-child(3){left:40%;animation-duration:10s;animation-delay:4s}
+.bg-particles span:nth-child(4){left:55%;animation-duration:18s;animation-delay:1s;width:4px;height:4px}
+.bg-particles span:nth-child(5){left:70%;animation-duration:13s;animation-delay:3s}
+.bg-particles span:nth-child(6){left:85%;animation-duration:11s;animation-delay:5s;width:2px;height:2px}
+.bg-particles span:nth-child(7){left:50%;animation-duration:16s;animation-delay:6s}
+.bg-particles span:nth-child(8){left:15%;animation-duration:14s;animation-delay:1s;width:4px;height:4px}
+.bg-particles span:nth-child(9){left:65%;animation-duration:9s;animation-delay:3s}
+.bg-particles span:nth-child(10){left:35%;animation-duration:17s;animation-delay:0s}
+@keyframes floatUp{
+    0%{transform:translateY(100vh) scale(0);opacity:0}
+    10%{opacity:1}
+    90%{opacity:1}
+    100%{transform:translateY(-10vh) scale(1);opacity:0}
+}
+.scroll-progress{position:fixed;top:0;left:0;width:0;height:2px;background:linear-gradient(90deg,#667eea,#764ba2);z-index:200;transition:width 0.1s}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 48px;height:64px;display:flex;justify-content:center;align-items:center;background:rgba(15,15,26,0.7);backdrop-filter:blur(24px) saturate(1.5);border-bottom:1px solid rgba(255,255,255,0.05);transform:translateY(-100%);animation:slideDown 0.8s 0.3s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes slideDown{to{transform:translateY(0)}}
+.nav-inner{max-width:1200px;width:100%;display:flex;justify-content:space-between;align-items:center}
+.nav-logo{font-size:15px;font-weight:700;letter-spacing:2px;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:36px;list-style:none}
+.nav-links a{color:rgba(255,255,255,0.25);text-decoration:none;font-size:13px;font-weight:500;transition:color 0.3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:100%;height:1px;background:linear-gradient(90deg,#667eea,#764ba2);transform:scaleX(0);transition:transform 0.3s}
+.nav-links a:hover{color:#fff}
+.nav-links a:hover::after{transform:scaleX(1)}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 48px 60px;max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.hero-glow{position:absolute;right:-100px;top:30%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle at 30% 30%,rgba(102,126,234,0.08),transparent 60%);pointer-events:none;animation:glowPulse 6s ease-in-out infinite alternate}
+@keyframes glowPulse{0%{transform:scale(1);opacity:0.4}100%{transform:scale(1.2);opacity:0.8}}
+.hero-label{font-size:12px;font-weight:500;color:rgba(255,255,255,0.15);letter-spacing:4px;text-transform:uppercase;margin-bottom:16px;opacity:0;animation:fadeUp 0.8s 0.2s cubic-bezier(0.16,1,0.3,1) forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.hero-title{font-size:clamp(56px,10vw,140px);font-weight:900;letter-spacing:-4px;line-height:1;margin-bottom:8px;opacity:0;animation:fadeUp 0.8s 0.4s cubic-bezier(0.16,1,0.3,1) forwards}
+.hero-gradient{background:linear-gradient(135deg,#667eea 0%,#764ba2 40%,#fff 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:clamp(56px,10vw,140px);font-weight:900;letter-spacing:-4px;line-height:1;margin-bottom:32px;color:rgba(255,255,255,0.03);opacity:0;animation:fadeUp 0.8s 0.6s cubic-bezier(0.16,1,0.3,1) forwards}
+.hero-desc{font-size:17px;font-weight:400;color:rgba(255,255,255,0.3);max-width:460px;line-height:1.8;margin-bottom:40px;opacity:0;animation:fadeUp 0.8s 0.8s cubic-bezier(0.16,1,0.3,1) forwards}
+.hero-actions{display:flex;gap:12px;opacity:0;animation:fadeUp 0.8s 1.0s cubic-bezier(0.16,1,0.3,1) forwards}
+.btn{padding:14px 32px;border-radius:100px;font-size:14px;font-weight:600;text-decoration:none;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);display:inline-flex;align-items:center;gap:8px;border:none;font-family:inherit;cursor:pointer}
+.btn-fill{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+.btn-fill:hover{transform:scale(1.05);box-shadow:0 12px 40px rgba(102,126,234,0.2)}
+.btn-outline{background:transparent;color:rgba(255,255,255,0.3);border:1px solid rgba(255,255,255,0.08)}
+.btn-outline:hover{border-color:rgba(255,255,255,0.2);color:#fff;transform:scale(1.05)}
+.divider{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.04),transparent)}
+.section{padding:120px 48px;max-width:1200px;margin:0 auto;position:relative;z-index:1}
+.section-header{margin-bottom:64px}
+.section-tag{font-size:12px;font-weight:600;color:rgba(255,255,255,0.15);letter-spacing:5px;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-size:clamp(32px,4vw,48px);font-weight:700;letter-spacing:-2px;line-height:1.15;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.section-title span{color:rgba(255,255,255,0.03);display:block;font-size:clamp(48px,6vw,72px);font-weight:900;margin-top:-12px;-webkit-text-fill-color:rgba(255,255,255,0.03)}
+.section-desc{font-size:15px;font-weight:400;color:rgba(255,255,255,0.25);max-width:440px;line-height:1.8;margin-top:16px}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.about-visual{aspect-ratio:1;border-radius:24px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);position:relative;transition:transform 0.5s}
+.about-visual:hover{transform:scale(1.02)}
+.about-visual img{width:100%;height:100%;object-fit:cover;display:block}
+.about-text p{font-size:16px;font-weight:400;color:rgba(255,255,255,0.4);line-height:2;margin-bottom:16px}
+.about-text strong{color:#fff;font-weight:600}
+.projects-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.project-card{padding:36px;border-radius:20px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:all 0.5s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;backdrop-filter:blur(10px)}
+.project-card::after{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,rgba(102,126,234,0.04),transparent);opacity:0;transition:opacity 0.5s}
+.project-card:hover{border-color:rgba(102,126,234,0.15);background:rgba(102,126,234,0.03);transform:translateY(-8px)}
+.project-card:hover::after{opacity:1}
+.project-icon{font-size:28px;margin-bottom:20px;display:block;position:relative;z-index:1}
+.project-name{font-size:18px;font-weight:600;margin-bottom:10px;position:relative;z-index:1}
+.project-desc{font-size:14px;font-weight:400;color:rgba(255,255,255,0.25);line-height:1.7;position:relative;z-index:1}
+.project-link{display:inline-block;margin-top:16px;font-size:13px;font-weight:500;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;transition:all 0.3s;position:relative;z-index:1;text-decoration:none}
+.project-card:hover .project-link{transform:translateX(4px)}
+.contact-area{text-align:center;padding:100px 20px}
+.contact-title{font-size:clamp(40px,6vw,72px);font-weight:800;letter-spacing:-2px;margin-bottom:16px;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.contact-desc{font-size:15px;color:rgba(255,255,255,0.2);margin-bottom:40px}
+.social-row{display:flex;justify-content:center;align-items:center;gap:32px;flex-wrap:wrap}
+.social-item{display:flex;align-items:center;gap:8px}
+.social-btn{width:48px;height:48px;border-radius:100px;border:1px solid rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:18px;text-decoration:none;transition:all 0.3s;background:rgba(255,255,255,0.02);cursor:pointer}
+.social-btn:hover{border-color:rgba(102,126,234,0.15);background:rgba(102,126,234,0.04);transform:translateY(-4px) scale(1.05)}
+.social-label{font-size:12px;color:rgba(255,255,255,0.2);letter-spacing:1px}
+.email-tip{
+    font-size:12px;
+    color:rgba(255,255,255,0.3);
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.04);
+    padding:4px 12px;
+    border-radius:8px;
+    white-space:nowrap;
+    opacity:0;
+    transition:opacity 0.3s;
+    pointer-events:none;
+    margin-left:4px;
+}
+.email-tip.show{opacity:1}
+
+.footer{text-align:center;padding:32px;border-top:1px solid rgba(255,255,255,0.02);font-size:12px;color:rgba(255,255,255,0.08)}
+@media(max-width:768px){
+    .nav{padding:0 20px}
+    .nav-links{display:none}
+    .hero{padding:80px 20px 40px}
+    .section{padding:80px 20px}
+    .about-grid{grid-template-columns:1fr;gap:40px}
+    .projects-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="bg-particles">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+</div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<nav class="nav">
+    <div class="nav-inner">
+        <div class="nav-logo">YOULI2012</div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="hero-glow"></div>
+    <div class="hero-label">✦ 欢迎来到我的世界</div>
+    <h1 class="hero-title"><span class="hero-gradient">YOULI</span></h1>
+    <h1 class="hero-sub">2012</h1>
+    <p class="hero-desc">
+        热爱创造，喜欢探索。<br>
+        相信好的设计能带来不一样的体验。
+    </p>
+    <div class="hero-actions">
+        <a href="#projects" class="btn btn-fill">查看作品 →</a>
+        <a href="#contact" class="btn btn-outline">联系我</a>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section" id="about">
+    <div class="section-header">
+        <div class="section-tag">✦ 01 — About</div>
+        <h2 class="section-title">关于我 <span>About</span></h2>
+        <p class="section-desc">这里写你的故事，让大家更了解你。</p>
+    </div>
+    <div class="about-grid">
+        <div class="about-visual"><img src="avatar.jpg" alt="avatar"></div>
+        <div class="about-text">
+            <p>嘿！我是 <strong>YOULI2012</strong>，一个热爱创造的人。</p>
+            <p>一名业余程序员</p>
+            <p>我会用心制作每一个作品</p>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section" id="projects">
+    <div class="section-header">
+        <div class="section-tag">✦ 02 — Works</div>
+        <h2 class="section-title">我的项目 <span>Projects</span></h2>
+        <p class="section-desc">用心做出的每一个作品。</p>
+    </div>
+    <div class="projects-grid">
+        <div class="project-card">
+            <span class="project-icon">🎮</span>
+            <h3 class="project-name">来自67之神的挑战</h3>
+            <p class="project-desc">小游戏 可以锻炼手眼协调和反应能力 （括号：好处是我编的）</p>
+            <a href="game-detail.html" class="project-link">了解更多 →</a>
+        </div>
+        <div class="project-card">
+            <span class="project-icon">🌐</span>
+            <h3 class="project-name">暂无</h3>
+            <p class="project-desc">还没做</p>
+            <span class="project-link">了解更多 →</span>
+        </div>
+        <div class="project-card">
+            <span class="project-icon">⚡</span>
+            <h3 class="project-name">暂无</h3>
+            <p class="project-desc">不知道做啥</p>
+            <span class="project-link">了解更多 →</span>
+        </div>
+    </div>
+</section>
+
+<div class="divider"></div>
+
+<section class="section" id="contact">
+    <div class="contact-area">
+        <div class="section-tag">✦ 03 — Contact</div>
+        <h2 class="contact-title">一起聊聊吧</h2>
+        <p class="contact-desc">随便打个招呼、合作、或者只是分享点什么～</p>
+        <div class="social-row">
+            <div class="social-item">
+                <a href="https://space.bilibili.com/1200036082" target="_blank" class="social-btn">📺</a>
+                <span class="social-label">BILIBILI</span>
+            </div>
+            <div class="social-item">
+                <a href="javascript:void(0)" class="social-btn" id="emailBtn2">✉️</a>
+                <span class="social-label">电子邮箱</span>
+                <span class="email-tip" id="emailTip">jingbrr@163.com</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    ✦ 2026 · YOULI2012
+</footer>
+
+<script>
+const progressBar = document.getElementById('scrollProgress');
+window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    progressBar.style.width = (scrollTop / docHeight) * 100 + '%';
+});
+
+const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.opacity = '1';
+            entry.target.style.transform = 'translateY(0)';
+        }
+    });
+}, observerOptions);
+
+document.querySelectorAll('.project-card, .about-grid, .section-header').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(40px)';
+    el.style.transition = 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+    observer.observe(el);
+});
+
+document.getElementById('emailBtn2').addEventListener('click', function() {
+    const tip = document.getElementById('emailTip');
+    tip.classList.add('show');
+    setTimeout(() => tip.classList.remove('show'), 2500);
+});
+</script>
+</body>
+</html>
