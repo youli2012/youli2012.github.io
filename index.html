@@ -200,9 +200,60 @@ footer .social a:hover{color:#fff}
   
   footer{padding:30px 24px}
 }
+
+/* --- 3D视差 --- */
+.parallax-wrap{
+  perspective:1200px;perspective-origin:50% 50%;
+}
+.parallax-layer{
+  transform-style:preserve-3d;transition:transform .15s ease-out;
+}
+
+/* --- 滚动进度条 --- */
+.scroll-progress{
+  position:fixed;top:0;left:0;width:0;height:2px;
+  background:linear-gradient(90deg,#fff,#666);
+  z-index:999;transition:width .1s;
+}
+
+/* --- 点击波纹 --- */
+.ripple-container{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  pointer-events:none;z-index:9997;
+}
+.ripple{
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.3);
+  width:0;height:0;
+  animation:rippleAnim .8s ease-out forwards;
+}
+@keyframes rippleAnim{
+  0%{width:0;height:0;opacity:1}
+  100%{width:200px;height:200px;opacity:0;margin:-100px 0 0 -100px}
+}
+
+/* --- 文字逐字浮现 --- */
+.reveal-text{
+  opacity:0;transform:translateY(20px);
+  transition:opacity .6s ease,transform .6s ease;
+}
+.reveal-text.visible{
+  opacity:1;transform:translateY(0);
+}
+.reveal-char{
+  display:inline-block;opacity:0;transform:translateY(15px) rotateX(-30deg);
+  transition:opacity .4s ease,transform .4s ease;
+}
+.reveal-char.show{
+  opacity:1;transform:translateY(0) rotateX(0);
+}
+
 </style>
 </head>
 <body>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="ripple-container" id="rippleContainer"></div>
+
 
 <div class="glow" id="glow"></div>
 
@@ -215,7 +266,7 @@ footer .social a:hover{color:#fff}
   </div>
 </nav>
 
-<section class="hero">
+<section class="hero parallax-layer" data-speed="0.03">
   <div class="greeting">✦ 你好，世界</div>
   <h1>youli2012</h1>
   <div class="tagline">
@@ -227,7 +278,7 @@ footer .social a:hover{color:#fff}
   </div>
 </section>
 
-<section id="about">
+<section id="about" class="parallax-layer" data-speed="0.02">
   <div class="section-label">/ 01 关于</div>
   <div class="about-wrap">
     <div class="left">
@@ -253,7 +304,7 @@ footer .social a:hover{color:#fff}
   </div>
 </section>
 
-<section id="work">
+<section id="work" class="parallax-layer" data-speed="0.01">
   <div class="section-label">/ 02 作品</div>
   <div class="grid">
     <a href="来自67之神的挑战.html" style="text-decoration:none;color:inherit;display:block"><div class="grid-item"><div class="hover-line"></div><div class="num">01</div><h3>67小游戏</h3><p>来自67之神的挑战</p></div></a>
@@ -327,6 +378,65 @@ document.querySelectorAll('.grid-item').forEach((item, i) => {
 });
 
 // --- 统计数字滚动动画 ---
+
+
+// --- 3D鼠标视差 ---
+const parallaxLayers = document.querySelectorAll('.parallax-layer');
+document.addEventListener('mousemove', e => {
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  const x = (e.clientX - cx) / cx;
+  const y = (e.clientY - cy) / cy;
+  
+  parallaxLayers.forEach(el => {
+    const speed = parseFloat(el.dataset.speed) || 0.02;
+    el.style.transform = `translateX(${x * speed * 30}px) translateY(${y * speed * 30}px)`;
+  });
+});
+
+// --- 滚动进度条 ---
+const progressBar = document.getElementById('scrollProgress');
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  progressBar.style.width = progress + '%';
+});
+
+// --- 点击波纹 ---
+const rippleContainer = document.getElementById('rippleContainer');
+document.addEventListener('click', e => {
+  const ripple = document.createElement('div');
+  ripple.className = 'ripple';
+  ripple.style.left = e.clientX + 'px';
+  ripple.style.top = e.clientY + 'px';
+  rippleContainer.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 800);
+});
+
+// --- 文字逐字浮现 ---
+const revealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const text = entry.target;
+      const chars = text.textContent.split('');
+      text.textContent = '';
+      chars.forEach((char, i) => {
+        const span = document.createElement('span');
+        span.className = 'reveal-char';
+        span.textContent = char === ' ' ? '\u00a0' : char;
+        span.style.transitionDelay = i * 30 + 'ms';
+        text.appendChild(span);
+        setTimeout(() => span.classList.add('show'), 100);
+      });
+      revealObserver.unobserve(text);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('.about-wrap .right, .hero .tagline').forEach(el => {
+  revealObserver.observe(el);
+});
 
 </script>
 </body>
