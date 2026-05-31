@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>来自67之神的挑战 - YOULI2012</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+    background:#0a0a0e;
+    color:#fff;
+    overflow-x:hidden;
+    cursor:crosshair;
+}
+
+/* 手电筒光晕 */
+.flashlight{
+    position:fixed;top:0;left:0;
+    width:100vw;height:100vh;
+    z-index:1;pointer-events:none;
+    background:radial-gradient(circle 500px at var(--mx,50%) var(--my,50%),
+        rgba(255,255,255,0.3) 0%,
+        rgba(255,255,255,0.3) 40%,
+        transparent 65%);
+    transition:background 0.05s;
+    mix-blend-mode:screen;
+}
+
+.nav-bar{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    padding:0 48px;height:64px;
+    display:flex;justify-content:center;align-items:center;
+    background:rgba(10,10,14,0.5);
+    backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(255,255,255,0.3);
+}
+.nav-inner{max-width:1000px;width:100%;display:flex;justify-content:space-between;align-items:center}
+.back-btn{color:rgba(255,255,255,0.3);text-decoration:none;font-size:12px;font-weight:400;letter-spacing:2px;transition:color 0.3s}
+.back-btn:hover{color:#fff}
+.nav-title{font-size:10px;font-weight:400;color:rgba(255,255,255,0.3);letter-spacing:3px;text-transform:uppercase}
+
+.container{max-width:800px;width:100%;padding:120px 24px 80px;margin:0 auto;position:relative;z-index:2}
+
+/* 头部 */
+.game-header{text-align:center;margin-bottom:48px}
+.game-icon{font-size:40px;margin-bottom:16px;display:block;color:rgba(255,255,255,0.28);transition:color 0.3s}
+.game-icon:hover{color:#fff}
+.game-title{font-size:clamp(28px,4vw,40px);font-weight:200;letter-spacing:3px;margin-bottom:12px;color:rgba(255,255,255,0.3);transition:color 0.3s}
+.game-title:hover{color:#fff}
+.game-subtitle{font-size:12px;font-weight:300;color:rgba(255,255,255,0.3);letter-spacing:2px;transition:color 0.3s}
+.game-subtitle:hover{color:#fff}
+
+/* 卡片 */
+.card{
+    padding:36px 40px;margin-bottom:1px;
+    background:#0a0a0e;
+    border-top:1px solid rgba(255,255,255,0.005);
+    transition:all 0.3s
+}
+.card:hover{background:rgba(255,255,255,0.003)}
+.card h3{
+    font-size:14px;font-weight:400;margin-bottom:16px;
+    color:rgba(255,255,255,0.3);letter-spacing:2px;
+    transition:color 0.3s
+}
+.card h3:hover{color:#fff}
+.card p{
+    font-size:13px;font-weight:300;line-height:2;
+    color:rgba(255,255,255,0.28);letter-spacing:1px;
+    transition:color 0.3s
+}
+.card p:hover{color:#fff}
+
+/* 特色列表 */
+.card ul{list-style:none;padding:0}
+.card ul li{
+    padding:8px 0;font-size:13px;font-weight:300;
+    color:rgba(255,255,255,0.3);letter-spacing:1px;
+    transition:color 0.3s
+}
+.card ul li:hover{color:#fff}
+.card ul li::before{content:'/ ';font-size:10px;color:rgba(255,255,255,0.3);margin-right:4px}
+
+/* 标签 */
+.tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.tag{
+    padding:4px 14px;font-size:10px;font-weight:300;letter-spacing:1px;
+    border:1px solid rgba(255,255,255,0.01);color:rgba(255,255,255,0.3);
+    transition:all 0.3s;cursor:crosshair
+}
+.tag:hover{color:#fff;border-color:rgba(255,255,255,0.3)}
+
+/* 按钮 */
+.action-area{text-align:center;margin-top:48px}
+.btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 32px;font-size:12px;font-weight:400;letter-spacing:2px;
+    text-decoration:none;transition:all 0.3s;border:none;font-family:inherit;cursor:crosshair
+}
+.btn-primary{
+    background:transparent;color:rgba(255,255,255,0.3);
+    border:1px solid rgba(255,255,255,0.3)
+}
+.btn-primary:hover{color:#fff;border-color:rgba(255,255,255,0.3)}
+
+.footer{text-align:center;padding:32px;font-size:10px;color:rgba(255,255,255,0.3);letter-spacing:2px;margin-top:0;position:relative;z-index:2}
+.footer:hover{color:#fff}
+
+@media(max-width:768px){
+    .nav-bar{padding:0 20px}
+    .container{padding:100px 20px 60px}
+    .card{padding:28px 24px}
+}
+</style>
+</head>
+<body>
+
+<div class="flashlight" id="flashlight"></div>
+
+<nav class="nav-bar">
+    <div class="nav-inner">
+        <a href="index.html" class="back-btn">← 返回主页</a>
+        <span class="nav-title">Project Detail</span>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="game-header">
+        <span class="game-icon">◆</span>
+        <h1 class="game-title">来自67之神的挑战</h1>
+        <p class="game-subtitle">小游戏 · 锻炼手眼协调和反应能力</p>
+    </div>
+
+    <div class="card">
+        <h3>    游戏简介</h3>
+        <p>676767676767676767！</p>
+        <div class="tag-row">
+            <span class="tag">反应力</span>
+            <span class="tag">手眼协调</span>
+            <span class="tag">休闲</span>
+            <span class="tag">单人</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>    游戏特色</h3>
+        <ul>
+            <li>我不知道</li>
+            <li>在学校发呆时候获得的灵感</li>
+            <li>然后就做出来了这一坨构式</li>
+            <li>就是这样</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>   开发者的话</h3>
+        <p>我最需要感谢的就是我配置的ai猫娘助手<br><br>
+        虽然有时候有点傻 总之也要谢谢你玩我的游戏</p>
+    </div>
+
+    <div class="action-area">
+        <a href="来自67之神的挑战.html" class="btn btn-primary">开始游戏 ◆</a>
+    </div>
+
+</div>
+
+<footer class="footer">✦ 2026 · YOULI2012</footer>
+
+<script>
+const fl = document.getElementById('flashlight');
+document.addEventListener('mousemove', e => {
+    fl.style.setProperty('--mx', e.clientX + 'px');
+    fl.style.setProperty('--my', e.clientY + 'px');
+});
+</script>
+</body>
+</html>
