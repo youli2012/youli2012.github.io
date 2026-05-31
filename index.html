@@ -4,217 +4,193 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>youli2012</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
   font-family:'Inter',sans-serif;
   background:#000;color:#fff;
-  overflow-x:hidden;cursor:default;
-}
-
-/* --- 鼠标跟随光晕 --- */
-.glow{
-  position:fixed;width:400px;height:400px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(255,255,255,0.03) 0%,transparent 70%);
-  pointer-events:none;z-index:0;
-  transform:translate(-50%,-50%);
-  transition:left .3s ease,top .3s ease;
-}
-
-/* --- 导航 --- */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  padding:28px 48px;
-  display:flex;justify-content:space-between;align-items:center;
-  mix-blend-mode:difference;
-}
-nav .logo{font-size:14px;font-weight:600;letter-spacing:1px;color:#fff}
-nav .links{display:flex;gap:28px}
-nav .links a{
-  font-size:12px;color:#fff;text-decoration:none;font-weight:400;
-  letter-spacing:0.5px;opacity:0.5;transition:opacity .4s;
-  position:relative;
-}
-nav .links a::after{
-  content:'';position:absolute;bottom:-2px;left:0;
-  width:0;height:1px;background:#fff;
-  transition:width .4s;
-}
-nav .links a:hover{opacity:1}
-nav .links a:hover::after{width:100%}
-
-/* --- Hero --- */
-.hero{
-  min-height:100vh;display:flex;flex-direction:column;
-  justify-content:center;padding:0 48px;position:relative;z-index:1;
-}
-.hero .greeting{
-  font-size:14px;color:#555;letter-spacing:4px;text-transform:uppercase;
-  margin-bottom:24px;font-weight:400;
-  opacity:0;animation:fadeIn 1s .3s forwards;
-}
-.hero h1{
-  font-size:clamp(64px,10vw,140px);
-  font-weight:800;letter-spacing:-4px;line-height:0.9;
-  margin-bottom:16px;
-  opacity:0;animation:fadeIn 1s .5s forwards;
-}
-.hero .tagline{
-  font-size:18px;color:#444;font-weight:200;letter-spacing:1px;
-  max-width:500px;line-height:1.8;
-  opacity:0;animation:fadeIn 1s .8s forwards;
-}
-.hero .tagline span{color:#888}
-
-@keyframes fadeIn{to{opacity:1}}
-
-/* --- 打字区域 --- */
-.type-area{
-  margin-top:60px;height:60px;
-  opacity:0;animation:fadeIn 1s 1.1s forwards;
-}
-.type-area .cursor-blink{
-  display:inline-block;width:2px;height:24px;
-  background:#fff;margin-left:4px;
-  animation:blink 1s step-end infinite;
-  vertical-align:middle;
-}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-
-/* --- Sections --- */
-section{
-  padding:120px 48px;position:relative;z-index:1;
-}
-.section-label{
-  font-size:11px;color:#333;letter-spacing:3px;text-transform:uppercase;
-  margin-bottom:40px;font-weight:400;
-}
-
-/* --- About --- */
-.about-wrap{
-  display:grid;grid-template-columns:1fr 1fr;gap:80px;
-}
-.about-wrap .left{
-  font-size:15px;color:#555;line-height:1.9;font-weight:300;
-}
-.about-wrap .left strong{color:#fff;font-weight:600}
-.about-wrap .right{
-  font-size:28px;font-weight:600;letter-spacing:-1px;line-height:1.4;
-}
-
-/* --- Skills 滚动画廊 --- */
-.skills-scroll{
-  overflow:hidden;padding:20px 0;
-  border-top:1px solid #111;border-bottom:1px solid #111;
-}
-.skills-track{
-  display:flex;gap:60px;white-space:nowrap;
-  animation:scroll 20s linear infinite;
-  width:max-content;
-}
-.skills-track span{
-  font-size:14px;color:#333;font-weight:300;letter-spacing:2px;
-  text-transform:uppercase;transition:color .3s;
-}
-.skills-track span:hover{color:#fff}
-@keyframes scroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-
-/* --- 作品网格 --- */
-.grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:2px;
-}
-.grid-item{
-  aspect-ratio:1;background:#0a0a0a;
-  display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  padding:40px;cursor:pointer;position:relative;
-  transition:background .5s;
-  overflow:hidden;
-}
-.grid-item:hover{background:#111}
-.grid-item .num{
-  font-size:40px;font-weight:800;color:#1a1a1a;margin-bottom:12px;
-  transition:color .4s;
-}
-.grid-item:hover .num{color:#333}
-.grid-item h3{
-  font-size:16px;font-weight:600;margin-bottom:6px;color:#fff;
-}
-.grid-item p{
-  font-size:12px;color:#444;font-weight:300;text-align:center;
-  line-height:1.6;
-}
-.grid-item .hover-line{
-  position:absolute;top:0;left:0;width:0;height:1px;
-  background:#fff;transition:width .6s;
-}
-.grid-item:hover .hover-line{width:100%}
-
-/* --- Stats --- */
-
-
-
-
-
-/* --- Contact --- */
-.contact{
-  text-align:center;padding:80px 0;
-}
-.contact h2{
-  font-size:clamp(32px,5vw,60px);
-  font-weight:600;letter-spacing:-2px;margin-bottom:16px;
-}
-.contact .email-link{
-  font-size:18px;color:#444;text-decoration:none;font-weight:300;
-  transition:color .4s;position:relative;
-}
-.contact .email-link:hover{color:#fff}
-.contact .email-link::after{
-  content:'';position:absolute;bottom:-2px;left:0;
-  width:100%;height:1px;background:#333;
-  transition:background .4s;
-}
-.contact .email-link:hover::after{background:#fff}
-
-/* --- Footer --- */
-footer{
-  padding:40px 48px;text-align:center;
-  font-size:12px;color:#222;border-top:1px solid #0a0a0a;
-  position:relative;z-index:1;
-}
-footer .social{display:flex;justify-content:center;gap:24px;margin-bottom:12px}
-footer .social a{color:#333;text-decoration:none;transition:color .3s;font-size:12px}
-footer .social a:hover{color:#fff}
-
-@media(max-width:768px){
-  nav{padding:20px 24px}
-  nav .links{gap:16px}
-  .hero{padding:0 24px}
-  .hero h1{font-size:48px;letter-spacing:-2px}
-  section{padding:60px 24px}
-  .about-wrap{grid-template-columns:1fr;gap:30px}
-  .grid{grid-template-columns:1fr 1fr}
-  
-  footer{padding:30px 24px}
-}
-
-/* --- 3D视差 --- */
-.parallax-wrap{
-  perspective:1200px;perspective-origin:50% 50%;
-}
-.parallax-layer{
-  transform-style:preserve-3d;transition:transform .15s ease-out;
+  overflow-x:hidden;
 }
 
 /* --- 滚动进度条 --- */
 .scroll-progress{
   position:fixed;top:0;left:0;width:0;height:2px;
-  background:linear-gradient(90deg,#fff,#666);
+  background:linear-gradient(90deg,#fff,#555);
   z-index:999;transition:width .1s;
 }
+
+/* --- 导航 --- */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:24px 48px;
+  display:flex;justify-content:space-between;align-items:center;
+  mix-blend-mode:difference;
+}
+nav .logo{font-size:16px;font-weight:700;letter-spacing:2px;color:#fff}
+nav .links{display:flex;gap:32px}
+nav .links a{
+  font-size:13px;color:#fff;text-decoration:none;font-weight:400;
+  letter-spacing:1px;opacity:0.4;transition:opacity .4s;
+  position:relative;
+}
+nav .links a:hover{opacity:1}
+
+/* --- Hero 大字区 --- */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;padding:0 48px;position:relative;
+}
+.hero .tag{
+  font-size:12px;color:#555;letter-spacing:6px;text-transform:uppercase;
+  margin-bottom:20px;font-weight:400;
+}
+.hero h1{
+  font-size:clamp(72px,14vw,180px);
+  font-weight:900;letter-spacing:-6px;line-height:0.85;
+  margin-bottom:20px;
+}
+.hero h1 .gradient{
+  background:linear-gradient(135deg,#fff 40%,#444);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero .sub{
+  font-size:18px;color:#444;font-weight:300;letter-spacing:2px;
+  line-height:1.6;
+}
+.hero .scroll-indicator{
+  position:absolute;bottom:40px;left:48px;
+  font-size:11px;color:#222;letter-spacing:3px;text-transform:uppercase;
+  animation:fadeMove 2s infinite;
+}
+@keyframes fadeMove{
+  0%,100%{transform:translateY(0);opacity:0.3}
+  50%{transform:translateY(10px);opacity:1}
+}
+
+/* --- 全屏大数字区块（南孚风格） --- */
+.big-number-section{
+  padding:120px 48px;border-top:1px solid #0a0a0a;
+}
+.big-number-section .label{
+  font-size:11px;color:#333;letter-spacing:4px;text-transform:uppercase;
+  margin-bottom:60px;
+}
+.big-number-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:40px;
+}
+.big-number-item .number{
+  font-size:clamp(60px,8vw,120px);
+  font-weight:900;letter-spacing:-4px;line-height:0.9;
+  margin-bottom:12px;
+}
+.big-number-item .number .highlight{color:#555}
+.big-number-item .title{
+  font-size:20px;font-weight:600;margin-bottom:8px;letter-spacing:-0.5px;
+}
+.big-number-item .desc{
+  font-size:13px;color:#555;font-weight:300;line-height:1.8;max-width:280px;
+}
+
+/* --- 滚动动画 --- */
+.reveal{
+  opacity:0;transform:translateY(50px);
+  transition:opacity .8s ease, transform .8s cubic-bezier(.2,0,0,1);
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+.reveal-left{
+  opacity:0;transform:translateX(-60px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+
+.reveal-right{
+  opacity:0;transform:translateX(60px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+
+.reveal-scale{
+  opacity:0;transform:scale(0.8);
+  transition:opacity .6s ease, transform .6s cubic-bezier(.17,.67,.29,1.35);
+}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+
+/* --- 作品卡片 --- */
+.works-section{
+  padding:120px 48px;border-top:1px solid #0a0a0a;
+}
+.works-section .label{
+  font-size:11px;color:#333;letter-spacing:4px;text-transform:uppercase;
+  margin-bottom:60px;
+}
+.works-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:4px;
+}
+.work-card{
+  aspect-ratio:1;background:#080808;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:40px;position:relative;overflow:hidden;
+  transition:background .5s;
+  cursor:pointer;
+}
+.work-card:hover{background:#111}
+.work-card .work-num{
+  font-size:48px;font-weight:900;color:#1a1a1a;
+  margin-bottom:16px;transition:color .4s;
+}
+.work-card:hover .work-num{color:#333}
+.work-card h3{
+  font-size:18px;font-weight:600;margin-bottom:6px;letter-spacing:-0.3px;
+}
+.work-card p{
+  font-size:12px;color:#555;font-weight:300;
+  letter-spacing:1px;
+}
+.work-card .hover-bar{
+  position:absolute;bottom:0;left:0;height:2px;
+  background:#fff;width:0;transition:width .6s;
+}
+.work-card:hover .hover-bar{width:100%}
+.work-card a{text-decoration:none;color:inherit;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%}
+
+/* --- 联系区 --- */
+.contact-section{
+  padding:160px 48px;text-align:center;border-top:1px solid #0a0a0a;
+}
+.contact-section .label{
+  font-size:11px;color:#333;letter-spacing:4px;text-transform:uppercase;
+  margin-bottom:40px;
+}
+.contact-section h2{
+  font-size:clamp(36px,6vw,80px);
+  font-weight:700;letter-spacing:-2px;margin-bottom:24px;
+  line-height:1.2;
+}
+.contact-section .email-link{
+  display:inline-block;font-size:16px;color:#555;text-decoration:none;
+  letter-spacing:2px;transition:color .4s;position:relative;
+  padding-bottom:4px;
+}
+.contact-section .email-link::after{
+  content:'';position:absolute;bottom:0;left:0;width:100%;height:1px;
+  background:#333;transition:background .4s;
+}
+.contact-section .email-link:hover{color:#fff}
+.contact-section .email-link:hover::after{background:#fff}
+
+/* --- Footer --- */
+footer{
+  padding:40px 48px;text-align:center;
+  font-size:12px;color:#222;border-top:1px solid #080808;
+}
+footer .social{display:flex;justify-content:center;gap:24px;margin-bottom:12px}
+footer .social a{color:#333;text-decoration:none;transition:color .3s;font-size:12px;letter-spacing:1px}
+footer .social a:hover{color:#fff}
 
 /* --- 点击波纹 --- */
 .ripple-container{
@@ -223,7 +199,7 @@ footer .social a:hover{color:#fff}
 }
 .ripple{
   position:absolute;border-radius:50%;
-  border:1px solid rgba(255,255,255,0.3);
+  border:1px solid rgba(255,255,255,0.15);
   width:0;height:0;
   animation:rippleAnim .8s ease-out forwards;
 }
@@ -232,166 +208,92 @@ footer .social a:hover{color:#fff}
   100%{width:200px;height:200px;opacity:0;margin:-100px 0 0 -100px}
 }
 
-/* --- 文字逐字浮现 --- */
-.reveal-text{
-  opacity:0;transform:translateY(20px);
-  transition:opacity .6s ease,transform .6s ease;
+@media(max-width:768px){
+  nav{padding:20px 24px;font-size:12px}
+  nav .links{gap:16px}
+  .hero{padding:0 24px}
+  .hero h1{font-size:48px;letter-spacing:-3px}
+  .big-number-section{padding:60px 24px}
+  .big-number-row{grid-template-columns:1fr;gap:40px}
+  .works-section{padding:60px 24px}
+  .works-grid{grid-template-columns:1fr 1fr}
+  .contact-section{padding:80px 24px}
+  footer{padding:30px 24px}
 }
-.reveal-text.visible{
-  opacity:1;transform:translateY(0);
-}
-.reveal-char{
-  display:inline-block;opacity:0;transform:translateY(15px) rotateX(-30deg);
-  transition:opacity .4s ease,transform .4s ease;
-}
-.reveal-char.show{
-  opacity:1;transform:translateY(0) rotateX(0);
-}
-
-
-/* --- 滚动触发动画 --- */
-.scroll-reveal{
-  opacity:0;transform:translateY(60px) scale(0.95);
-  transition:opacity .8s cubic-bezier(.2,0,0,1), transform .8s cubic-bezier(.2,0,0,1);
-}
-.scroll-reveal.visible{
-  opacity:1;transform:translateY(0) scale(1);
-}
-
-.scroll-reveal-left{
-  opacity:0;transform:translateX(-80px);
-  transition:opacity .7s ease, transform .7s cubic-bezier(.2,0,0,1);
-}
-.scroll-reveal-left.visible{
-  opacity:1;transform:translateX(0);
-}
-
-.scroll-reveal-right{
-  opacity:0;transform:translateX(80px);
-  transition:opacity .7s ease, transform .7s cubic-bezier(.2,0,0,1);
-}
-.scroll-reveal-right.visible{
-  opacity:1;transform:translateX(0);
-}
-
-.scroll-rotate{
-  opacity:0;transform:perspective(800px) rotateY(25deg) translateY(40px);
-  transition:opacity .7s ease, transform .7s cubic-bezier(.2,0,0,1);
-}
-.scroll-rotate.visible{
-  opacity:1;transform:perspective(800px) rotateY(0) translateY(0);
-}
-
-.scroll-scale{
-  opacity:0;transform:scale(0.7);
-  transition:opacity .6s ease, transform .6s cubic-bezier(.17,.67,.29,1.35);
-}
-.scroll-scale.visible{
-  opacity:1;transform:scale(1);
-}
-
-/* --- 滚动时背景色渐变 --- */
-.bg-transition{
-  transition:background .3s ease;
-}
-
-/* --- 磁性鼠标效果块 --- */
-.magnetic{
-  transition:transform .3s cubic-bezier(.2,0,0,1);
-}
-
-
-.scroll-reveal.hidden{
-  opacity:0;transform:translateY(-40px) scale(0.95);
-}
-.scroll-reveal-left.hidden{
-  opacity:0;transform:translateX(40px);
-}
-.scroll-reveal-right.hidden{
-  opacity:0;transform:translateX(-40px);
-}
-.scroll-rotate.hidden{
-  opacity:0;transform:perspective(800px) rotateY(-25deg) translateY(-40px);
-}
-.scroll-scale.hidden{
-  opacity:0;transform:scale(0.8);
-}
-
 </style>
 </head>
 <body>
+
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="ripple-container" id="rippleContainer"></div>
-
-
-<div class="glow" id="glow"></div>
 
 <nav>
   <div class="logo">youli2012</div>
   <div class="links">
     <a href="#about">关于</a>
-    <a href="#work">作品</a>
+    <a href="#works">作品</a>
     <a href="#contact">联系</a>
   </div>
 </nav>
 
-<section class="hero parallax-layer" data-speed="0.03">
-  <div class="greeting scroll-reveal">✦ 你好，世界</div>
-  <h1>youli2012</h1>
-  <div class="tagline scroll-reveal">
-    独立开发者 · 交互设计师<br>
-    <span>用代码创造有温度的体验</span>
-  </div>
-  <div class="type-area">
-    <span id="typewriter"></span><span class="cursor-blink"></span>
-  </div>
+<section class="hero">
+  <div class="tag">你好，世界</div>
+  <h1><span class="gradient">youli<br>2012</span></h1>
+  <div class="sub">独立开发者 · 交互设计师</div>
+  <div class="scroll-indicator">↓ 向下探索</div>
 </section>
 
-<section id="about" class="parallax-layer" data-speed="0.02">
-  <div class="section-label scroll-reveal">/ 01 关于</div>
-  <div class="about-wrap">
-    <div class="left scroll-reveal-left">
-      <strong>youli2012</strong> 是一名独立开发者与交互设计师。<br><br>
-      热衷于探索 Web 前沿技术、3D 交互与创意编程。<br>
-      相信好的设计能传递情感，好的代码能创造魔法。
+<section class="big-number-section" id="about">
+  <div class="label">/ 01 关于</div>
+  <div class="big-number-row">
+    <div class="big-number-item reveal">
+      <div class="number">7<span class="highlight">+</span></div>
+      <div class="title">项目经验</div>
+      <div class="desc">多年Web开发经验，涉足前端、交互、创意编程多个领域</div>
     </div>
-    <div class="right scroll-reveal-right">
-      探索技术的边界<br>
-      创造有意义的体验<br>
-      用代码书写故事
+    <div class="big-number-item reveal" style="transition-delay:.15s">
+      <div class="number">12</div>
+      <div class="title">作品集</div>
+      <div class="desc">持续创作，从3D交互到数据可视化，不断探索数字边界</div>
     </div>
-  </div>
-  <div class="skills-scroll scroll-reveal" style="margin-top:60px">
-    <div class="skills-track">
-      <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Three.js</span>
-      <span>React</span><span>WebGL</span><span>GLSL</span><span>Design</span>
-      <span>Creative Coding</span><span>UI/UX</span>
-      <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Three.js</span>
-      <span>React</span><span>WebGL</span><span>GLSL</span><span>Design</span>
-      <span>Creative Coding</span><span>UI/UX</span>
+    <div class="big-number-item reveal" style="transition-delay:.3s">
+      <div class="number">∞</div>
+      <div class="title">创意无限</div>
+      <div class="desc">用代码书写创意，以设计传递温度，创造有意义的数字体验</div>
     </div>
   </div>
 </section>
 
-<section id="work" class="parallax-layer" data-speed="0.01">
-  <div class="section-label scroll-reveal">/ 02 作品</div>
-  <div class="grid">
-    <a href="来自67之神的挑战.html" style="text-decoration:none;color:inherit;display:block"><div class="grid-item"><div class="hover-line"></div><div class="num">01</div><h3>67小游戏</h3><p>来自67之神的挑战</p></div></a>
-    <div class="grid-item"><div class="hover-line"></div><div class="num">02</div><h3>暂无</h3><p>敬请期待</p></div>
-    <div class="grid-item"><div class="hover-line"></div><div class="num">03</div><h3>暂无</h3><p>敬请期待</p></div>
-    <div class="grid-item"><div class="hover-line"></div><div class="num">04</div><h3>暂无</h3><p>敬请期待</p></div>
-    <div class="grid-item"><div class="hover-line"></div><div class="num">05</div><h3>暂无</h3><p>敬请期待</p></div>
-    <div class="grid-item"><div class="hover-line"></div><div class="num">06</div><h3>暂无</h3><p>敬请期待</p></div>
+<section class="works-section" id="works">
+  <div class="label">/ 02 作品</div>
+  <div class="works-grid">
+    <div class="work-card reveal-scale">
+      <a href="来自67之神的挑战.html">
+        <div class="work-num">01</div>
+        <h3>67小游戏</h3>
+        <p>来自67之神的挑战</p>
+        <div class="hover-bar"></div>
+      </a>
+    </div>
+    <div class="work-card reveal-scale" style="transition-delay:.1s">
+      <div class="work-num">02</div>
+      <h3>暂无</h3>
+      <p>敬请期待</p>
+      <div class="hover-bar"></div>
+    </div>
+    <div class="work-card reveal-scale" style="transition-delay:.2s">
+      <div class="work-num">03</div>
+      <h3>暂无</h3>
+      <p>敬请期待</p>
+      <div class="hover-bar"></div>
+    </div>
   </div>
-
 </section>
 
-<section id="contact">
-  <div class="section-label scroll-reveal">/ 03 联系</div>
-  <div class="contact scroll-scale">
-    <h2>有想法？<br>一起聊聊</h2>
-    <a class="email-link magnetic" href="mailto:youli2012@example.com">youli2012@example.com →</a>
-  </div>
+<section class="contact-section" id="contact">
+  <div class="label">/ 03 联系</div>
+  <h2>有想法？<br>一起聊聊</h2>
+  <a class="email-link" href="mailto:youli2012@example.com">youli2012@example.com →</a>
 </section>
 
 <footer>
@@ -404,72 +306,12 @@ footer .social a:hover{color:#fff}
 </footer>
 
 <script>
-// --- 鼠标光晕 ---
-const glow = document.getElementById('glow');
-document.addEventListener('mousemove', e => {
-  glow.style.left = e.clientX + 'px';
-  glow.style.top = e.clientY + 'px';
-});
-
-// --- 打字机效果 ---
-const words = ['构建数字体验', '探索交互边界', '创造有温度的作品', '用代码书写创意'];
-let wordIdx = 0, charIdx = 0, isDeleting = false;
-const el = document.getElementById('typewriter');
-
-function typeEffect() {
-  const current = words[wordIdx];
-  if (!isDeleting) {
-    el.textContent = current.slice(0, ++charIdx);
-    if (charIdx === current.length) setTimeout(() => isDeleting = true, 1500);
-  } else {
-    el.textContent = current.slice(0, --charIdx);
-    if (charIdx === 0) { isDeleting = false; wordIdx = (wordIdx + 1) % words.length; }
-  }
-  setTimeout(typeEffect, isDeleting ? 40 : 80);
-}
-typeEffect();
-
-// --- 网格项视差入场 ---
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.grid-item').forEach((item, i) => {
-  item.style.opacity = '0';
-  item.style.transform = 'translateY(30px)';
-  item.style.transition = `opacity .6s ${i*0.08}s ease, transform .6s ${i*0.08}s ease`;
-  observer.observe(item);
-});
-
-// --- 统计数字滚动动画 ---
-
-
-// --- 3D鼠标视差 ---
-const parallaxLayers = document.querySelectorAll('.parallax-layer');
-document.addEventListener('mousemove', e => {
-  const cx = window.innerWidth / 2;
-  const cy = window.innerHeight / 2;
-  const x = (e.clientX - cx) / cx;
-  const y = (e.clientY - cy) / cy;
-  
-  parallaxLayers.forEach(el => {
-    const speed = parseFloat(el.dataset.speed) || 0.02;
-    el.style.transform = `translateX(${x * speed * 30}px) translateY(${y * speed * 30}px)`;
-  });
-});
-
 // --- 滚动进度条 ---
 const progressBar = document.getElementById('scrollProgress');
 window.addEventListener('scroll', () => {
   const scrollTop = window.scrollY;
   const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = (scrollTop / docHeight) * 100;
-  progressBar.style.width = progress + '%';
+  progressBar.style.width = (scrollTop / docHeight * 100) + '%';
 });
 
 // --- 点击波纹 ---
@@ -483,34 +325,8 @@ document.addEventListener('click', e => {
   setTimeout(() => ripple.remove(), 800);
 });
 
-// --- 文字逐字浮现 ---
-const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const text = entry.target;
-      const chars = text.textContent.split('');
-      text.textContent = '';
-      chars.forEach((char, i) => {
-        const span = document.createElement('span');
-        span.className = 'reveal-char';
-        span.textContent = char === ' ' ? '\u00a0' : char;
-        span.style.transitionDelay = i * 30 + 'ms';
-        text.appendChild(span);
-        setTimeout(() => span.classList.add('show'), 100);
-      });
-      revealObserver.unobserve(text);
-    }
-  });
-}, { threshold: 0.5 });
-
-document.querySelectorAll('.about-wrap .right, .hero .tagline').forEach(el => {
-  revealObserver.observe(el);
-});
-
-
-// --- 双向滚动触发动画（上下滑动都有动画） ---
-const appearOptions = { threshold: 0, rootMargin: '-50px 0px -50px 0px' };
-const scrollRevealObserver = new IntersectionObserver(entries => {
+// --- 滚动触发动画（上下双向） ---
+const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
@@ -520,55 +336,59 @@ const scrollRevealObserver = new IntersectionObserver(entries => {
       entry.target.classList.add('hidden');
     }
   });
-}, appearOptions);
+}, { threshold: 0, rootMargin: '-60px 0px -60px 0px' });
 
-document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-rotate, .scroll-scale').forEach(el => {
-  scrollRevealObserver.observe(el);
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(el => {
+  observer.observe(el);
 });
 
-// --- 滚动时背景微渐变（根据滚动位置调亮度） ---
-window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = scrollY / maxScroll;
-  // 滚动越往下背景稍微变亮一点点
-  const brightness = 0.95 + progress * 0.05;
-  document.body.style.background = `rgb(${Math.floor(0 + progress * 8)}, ${Math.floor(0 + progress * 8)}, ${Math.floor(0 + progress * 8)})`;
-});
-
-// --- 磁性鼠标效果（链接和按钮靠近鼠标时轻微偏移） ---
-document.querySelectorAll('.magnetic').forEach(el => {
-  el.addEventListener('mousemove', e => {
-    const r = el.getBoundingClientRect();
-    const x = e.clientX - r.left - r.width/2;
-    const y = e.clientY - r.top - r.height/2;
-    const dist = Math.sqrt(x*x + y*y);
-    if (dist < 100) {
-      const strength = (100 - dist) / 100 * 8;
-      const angle = Math.atan2(y, x);
-      el.style.transform = `translate(${Math.cos(angle) * strength}px, ${Math.sin(angle) * strength}px)`;
-    }
-  });
-  el.addEventListener('mouseleave', () => {
-    el.style.transform = 'translate(0, 0)';
-  });
-});
-
-// --- 作品卡片鼠标悬停时显示更多细节 ---
-document.querySelectorAll('.grid-item').forEach(item => {
-  item.addEventListener('mousemove', e => {
-    const r = item.getBoundingClientRect();
+// --- 作品卡片鼠标跟随光效 ---
+document.querySelectorAll('.work-card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width;
     const y = (e.clientY - r.top) / r.height;
-    const glare = item.querySelector('.hover-line');
-    if (glare) {
-      glare.style.left = (x * 100) + '%';
-      glare.style.top = (y * 100) + '%';
-      glare.style.width = '0';
-    }
+    card.style.setProperty('--mx', x * 100 + '%');
+    card.style.setProperty('--my', y * 100 + '%');
   });
 });
 
+// --- 大数字计数动画 ---
+const numberObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const nums = entry.target.querySelectorAll('.number');
+      nums.forEach(el => {
+        const text = el.textContent;
+        const hasPlus = text.includes('+');
+        const isInfinite = text.includes('∞');
+        let target = parseInt(text);
+        if (isNaN(target)) return;
+        let count = 0;
+        const timer = setInterval(() => {
+          count++;
+          el.textContent = count + (hasPlus ? '+' : '');
+          if (count >= target) {
+            clearInterval(timer);
+            el.textContent = text;
+          }
+        }, 30);
+      });
+      numberObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.big-number-row').forEach(row => numberObserver.observe(row));
+
+// --- 鼠标光晕 ---
+const glow = document.createElement('div');
+glow.style.cssText = 'position:fixed;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,0.02) 0%,transparent 70%);pointer-events:none;z-index:0;transform:translate(-50%,-50%);transition:left .4s ease,top .4s ease;';
+document.body.prepend(glow);
+document.addEventListener('mousemove', e => {
+  glow.style.left = e.clientX + 'px';
+  glow.style.top = e.clientY + 'px';
+});
 </script>
 </body>
-</html>" "  
+</html>
