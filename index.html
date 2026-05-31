@@ -651,18 +651,30 @@ document.querySelectorAll('a, button, .work-card, .big-number-item, .email-link'
 });
 
 
-// --- 邮箱点击显示 ---
+// --- 邮箱点击复制 ---
 const emailBtn = document.getElementById('emailBtn');
 const emailPopup = document.getElementById('emailPopup');
 if (emailBtn && emailPopup) {
   emailBtn.addEventListener('click', e => {
+    e.preventDefault();
     e.stopPropagation();
-    emailPopup.classList.toggle('show');
+    // 复制到剪贴板
+    const email = 'jingbrr@163.com';
+    navigator.clipboard.writeText(email).then(() => {
+      emailPopup.textContent = '已复制: jingbrr@163.com';
+      emailPopup.classList.add('show');
+      setTimeout(() => emailPopup.classList.remove('show'), 2000);
+    }).catch(() => {
+      // 降级处理
+      emailPopup.textContent = 'jingbrr@163.com';
+      emailPopup.classList.add('show');
+    });
   });
-  document.addEventListener('click', () => {
-    emailPopup.classList.remove('show');
+  document.addEventListener('click', (e) => {
+    if (!emailBtn.contains(e.target) && !emailPopup.contains(e.target)) {
+      emailPopup.classList.remove('show');
+    }
   });
-  emailPopup.addEventListener('click', e => e.stopPropagation());
 }
 
 </script>
