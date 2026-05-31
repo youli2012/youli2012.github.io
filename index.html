@@ -248,6 +248,58 @@ footer .social a:hover{color:#fff}
   opacity:1;transform:translateY(0) rotateX(0);
 }
 
+
+/* --- 滚动触发动画 --- */
+.scroll-reveal{
+  opacity:0;transform:translateY(60px) scale(0.95);
+  transition:opacity .8s cubic-bezier(.2,0,0,1), transform .8s cubic-bezier(.2,0,0,1);
+}
+.scroll-reveal.visible{
+  opacity:1;transform:translateY(0) scale(1);
+}
+
+.scroll-reveal-left{
+  opacity:0;transform:translateX(-80px);
+  transition:opacity .7s ease, transform .7s cubic-bezier(.2,0,0,1);
+}
+.scroll-reveal-left.visible{
+  opacity:1;transform:translateX(0);
+}
+
+.scroll-reveal-right{
+  opacity:0;transform:translateX(80px);
+  transition:opacity .7s ease, transform .7s cubic-bezier(.2,0,0,1);
+}
+.scroll-reveal-right.visible{
+  opacity:1;transform:translateX(0);
+}
+
+.scroll-rotate{
+  opacity:0;transform:perspective(800px) rotateY(25deg) translateY(40px);
+  transition:opacity .7s ease, transform .7s cubic-bezier(.2,0,0,1);
+}
+.scroll-rotate.visible{
+  opacity:1;transform:perspective(800px) rotateY(0) translateY(0);
+}
+
+.scroll-scale{
+  opacity:0;transform:scale(0.7);
+  transition:opacity .6s ease, transform .6s cubic-bezier(.17,.67,.29,1.35);
+}
+.scroll-scale.visible{
+  opacity:1;transform:scale(1);
+}
+
+/* --- 滚动时背景色渐变 --- */
+.bg-transition{
+  transition:background .3s ease;
+}
+
+/* --- 磁性鼠标效果块 --- */
+.magnetic{
+  transition:transform .3s cubic-bezier(.2,0,0,1);
+}
+
 </style>
 </head>
 <body>
@@ -267,9 +319,9 @@ footer .social a:hover{color:#fff}
 </nav>
 
 <section class="hero parallax-layer" data-speed="0.03">
-  <div class="greeting">✦ 你好，世界</div>
+  <div class="greeting scroll-reveal">✦ 你好，世界</div>
   <h1>youli2012</h1>
-  <div class="tagline">
+  <div class="tagline scroll-reveal">
     独立开发者 · 交互设计师<br>
     <span>用代码创造有温度的体验</span>
   </div>
@@ -279,20 +331,20 @@ footer .social a:hover{color:#fff}
 </section>
 
 <section id="about" class="parallax-layer" data-speed="0.02">
-  <div class="section-label">/ 01 关于</div>
+  <div class="section-label scroll-reveal">/ 01 关于</div>
   <div class="about-wrap">
-    <div class="left">
+    <div class="left scroll-reveal-left">
       <strong>youli2012</strong> 是一名独立开发者与交互设计师。<br><br>
       热衷于探索 Web 前沿技术、3D 交互与创意编程。<br>
       相信好的设计能传递情感，好的代码能创造魔法。
     </div>
-    <div class="right">
+    <div class="right scroll-reveal-right">
       探索技术的边界<br>
       创造有意义的体验<br>
       用代码书写故事
     </div>
   </div>
-  <div class="skills-scroll" style="margin-top:60px">
+  <div class="skills-scroll scroll-reveal" style="margin-top:60px">
     <div class="skills-track">
       <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Three.js</span>
       <span>React</span><span>WebGL</span><span>GLSL</span><span>Design</span>
@@ -305,7 +357,7 @@ footer .social a:hover{color:#fff}
 </section>
 
 <section id="work" class="parallax-layer" data-speed="0.01">
-  <div class="section-label">/ 02 作品</div>
+  <div class="section-label scroll-reveal">/ 02 作品</div>
   <div class="grid">
     <a href="来自67之神的挑战.html" style="text-decoration:none;color:inherit;display:block"><div class="grid-item"><div class="hover-line"></div><div class="num">01</div><h3>67小游戏</h3><p>来自67之神的挑战</p></div></a>
     <div class="grid-item"><div class="hover-line"></div><div class="num">02</div><h3>暂无</h3><p>敬请期待</p></div>
@@ -318,10 +370,10 @@ footer .social a:hover{color:#fff}
 </section>
 
 <section id="contact">
-  <div class="section-label">/ 03 联系</div>
-  <div class="contact">
+  <div class="section-label scroll-reveal">/ 03 联系</div>
+  <div class="contact scroll-scale">
     <h2>有想法？<br>一起聊聊</h2>
-    <a class="email-link" href="mailto:youli2012@example.com">youli2012@example.com →</a>
+    <a class="email-link magnetic" href="mailto:youli2012@example.com">youli2012@example.com →</a>
   </div>
 </section>
 
@@ -436,6 +488,64 @@ const revealObserver = new IntersectionObserver(entries => {
 
 document.querySelectorAll('.about-wrap .right, .hero .tagline').forEach(el => {
   revealObserver.observe(el);
+});
+
+
+// --- 滚动触发动画统一管理 ---
+const scrollRevealObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      scrollRevealObserver.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-rotate, .scroll-scale').forEach(el => {
+  scrollRevealObserver.observe(el);
+});
+
+// --- 滚动时背景微渐变（根据滚动位置调亮度） ---
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = scrollY / maxScroll;
+  // 滚动越往下背景稍微变亮一点点
+  const brightness = 0.95 + progress * 0.05;
+  document.body.style.background = `rgb(${Math.floor(0 + progress * 8)}, ${Math.floor(0 + progress * 8)}, ${Math.floor(0 + progress * 8)})`;
+});
+
+// --- 磁性鼠标效果（链接和按钮靠近鼠标时轻微偏移） ---
+document.querySelectorAll('.magnetic').forEach(el => {
+  el.addEventListener('mousemove', e => {
+    const r = el.getBoundingClientRect();
+    const x = e.clientX - r.left - r.width/2;
+    const y = e.clientY - r.top - r.height/2;
+    const dist = Math.sqrt(x*x + y*y);
+    if (dist < 100) {
+      const strength = (100 - dist) / 100 * 8;
+      const angle = Math.atan2(y, x);
+      el.style.transform = `translate(${Math.cos(angle) * strength}px, ${Math.sin(angle) * strength}px)`;
+    }
+  });
+  el.addEventListener('mouseleave', () => {
+    el.style.transform = 'translate(0, 0)';
+  });
+});
+
+// --- 作品卡片鼠标悬停时显示更多细节 ---
+document.querySelectorAll('.grid-item').forEach(item => {
+  item.addEventListener('mousemove', e => {
+    const r = item.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    const glare = item.querySelector('.hover-line');
+    if (glare) {
+      glare.style.left = (x * 100) + '%';
+      glare.style.top = (y * 100) + '%';
+      glare.style.width = '0';
+    }
+  });
 });
 
 </script>
