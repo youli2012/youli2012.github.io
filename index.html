@@ -11,7 +11,7 @@ html{scroll-behavior:smooth}
 body{
   font-family:'Inter',sans-serif;
   background:#000;color:#fff;
-  overflow-x:hidden;cursor:default;
+  overflow-x:hidden;cursor:none;
 }
 
 /* --- 鼠标跟随光晕 --- */
@@ -317,9 +317,36 @@ footer .social a:hover{color:#fff}
   opacity:0;transform:scale(0.8);
 }
 
+
+/* --- 自定义鼠标 --- */
+.custom-cursor{
+  position:fixed;width:8px;height:8px;border-radius:50%;
+  background:#fff;pointer-events:none;z-index:99999;
+  transform:translate(-50%,-50%);
+  transition:width .2s,height .2s,background .2s;
+  mix-blend-mode:difference;
+}
+.custom-cursor-ring{
+  position:fixed;width:36px;height:36px;border-radius:50%;
+  border:1px solid rgba(255,255,255,0.3);
+  pointer-events:none;z-index:99998;
+  transform:translate(-50%,-50%);
+  transition:width .3s,height .3s,border-color .3s;
+}
+.custom-cursor.hover{
+  width:16px;height:16px;background:transparent;
+  border:2px solid #fff;
+}
+.custom-cursor-ring.hover{
+  width:56px;height:56px;
+  border-color:rgba(255,255,255,0.6);
+}
+
 </style>
 </head>
 <body>
+<div class="custom-cursor"></div>
+<div class="custom-cursor-ring"></div>
 <div class="scroll-progress" id="scrollProgress"></div>
 <div class="ripple-container" id="rippleContainer"></div>
 
@@ -566,6 +593,40 @@ document.querySelectorAll('.grid-item').forEach(item => {
       glare.style.top = (y * 100) + '%';
       glare.style.width = '0';
     }
+  });
+});
+
+
+// --- 自定义鼠标圆圈 ---
+const cursor = document.querySelector('.custom-cursor');
+const cursorRing = document.querySelector('.custom-cursor-ring');
+let mx = 0, my = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX;
+  my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+
+function animateRing() {
+  ringX += (mx - ringX) * 0.12;
+  ringY += (my - ringY) * 0.12;
+  cursorRing.style.left = ringX + 'px';
+  cursorRing.style.top = ringY + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+// 悬停时放大
+document.querySelectorAll('a, button, .work-card, .big-number-item, .email-link').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.classList.add('hover');
+    cursorRing.classList.add('hover');
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.classList.remove('hover');
+    cursorRing.classList.remove('hover');
   });
 });
 
