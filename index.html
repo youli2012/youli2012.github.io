@@ -350,6 +350,8 @@ footer .social a:hover{color:#fff}
   100%{opacity:1;transform:translateX(-50%) translateY(0)}
 }
 
+
+@keyframes fadeInOut{0%{opacity:0;transform:translateX(-50%) translateY(10px)}15%{opacity:1;transform:translateX(-50%) translateY(0)}85%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-10px)}}
 </style>
 </head>
 <body>
@@ -433,7 +435,7 @@ footer .social a:hover{color:#fff}
 <footer>
   <div class="social">
     <a href="https://github.com/youli2012" target="_blank">GitHub</a>
-    <a href="#">Email</a>
+    <a href="javascript:void(0)" id="copyEmailBtn" style="position:relative">Email</a>
     <a href="https://space.bilibili.com/1200036082" target="_blank">Bilibili</a>
   </div>
   © 2026 youli2012
@@ -642,6 +644,24 @@ document.querySelectorAll('a, button, .work-card, .big-number-item, .email-link'
 
 
 
+
+// --- 底部Email点击复制 ---
+const copyBtn = document.getElementById('copyEmailBtn');
+const toast = document.getElementById('copyToast');
+if (copyBtn && toast) {
+  copyBtn.addEventListener('click', e => {
+    e.preventDefault();
+    navigator.clipboard.writeText('jingbrr@163.com').then(() => {
+      toast.style.display = 'block';
+      toast.style.animation = 'none';
+      toast.offsetHeight;
+      toast.style.animation = 'fadeInOut 1.5s ease forwards';
+      setTimeout(() => { toast.style.display = 'none'; }, 1500);
+    });
+  });
+}
+
 </script>
+<div id="copyToast" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 24px;border-radius:8px;font-size:13px;border:1px solid #333;display:none;z-index:99999;white-space:nowrap">已复制 jingbrr@163.com ✓</div>
 </body>
 </html>" "  
