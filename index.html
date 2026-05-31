@@ -300,6 +300,23 @@ footer .social a:hover{color:#fff}
   transition:transform .3s cubic-bezier(.2,0,0,1);
 }
 
+
+.scroll-reveal.hidden{
+  opacity:0;transform:translateY(-40px) scale(0.95);
+}
+.scroll-reveal-left.hidden{
+  opacity:0;transform:translateX(40px);
+}
+.scroll-reveal-right.hidden{
+  opacity:0;transform:translateX(-40px);
+}
+.scroll-rotate.hidden{
+  opacity:0;transform:perspective(800px) rotateY(-25deg) translateY(-40px);
+}
+.scroll-scale.hidden{
+  opacity:0;transform:scale(0.8);
+}
+
 </style>
 </head>
 <body>
@@ -491,15 +508,19 @@ document.querySelectorAll('.about-wrap .right, .hero .tagline').forEach(el => {
 });
 
 
-// --- 滚动触发动画统一管理 ---
+// --- 双向滚动触发动画（上下滑动都有动画） ---
+const appearOptions = { threshold: 0, rootMargin: '-50px 0px -50px 0px' };
 const scrollRevealObserver = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
-      scrollRevealObserver.unobserve(entry.target);
+      entry.target.classList.remove('hidden');
+    } else {
+      entry.target.classList.remove('visible');
+      entry.target.classList.add('hidden');
     }
   });
-}, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+}, appearOptions);
 
 document.querySelectorAll('.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-rotate, .scroll-scale').forEach(el => {
   scrollRevealObserver.observe(el);
