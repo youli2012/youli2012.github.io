@@ -343,21 +343,10 @@ footer .social a:hover{color:#fff}
 }
 
 
-.email-popup{
-  display:none;position:absolute;left:50%;transform:translateX(-50%);
-  bottom:100%;margin-bottom:12px;
-  background:#111;color:#fff;padding:8px 20px;border-radius:6px;
-  font-size:14px;letter-spacing:1px;white-space:nowrap;
-  border:1px solid #222;
-}
-.email-popup::after{
-  content:'';position:absolute;top:100%;left:50%;
-  transform:translateX(-50%);
-  border:6px solid transparent;border-top-color:#111;
-}
-.email-popup.show{display:block;animation:popIn .3s ease}
-@keyframes popIn{
-  0%{opacity:0;transform:translateX(-50%) translateY(10px)}
+
+
+
+
   100%{opacity:1;transform:translateX(-50%) translateY(0)}
 }
 
@@ -376,7 +365,7 @@ footer .social a:hover{color:#fff}
   <div class="logo">youli2012</div>
   <div class="links">
     <a href="#about">关于</a>
-    <div class="email-popup" id="emailPopup">jingbrr@163.com</div>
+    
     <a href="#work">作品</a>
     <a href="#contact">联系</a>
   </div>
@@ -437,7 +426,7 @@ footer .social a:hover{color:#fff}
   <div class="section-label scroll-reveal">/ 03 联系</div>
   <div class="contact scroll-scale">
     <h2>有想法？<br>一起聊聊</h2>
-    <a class="email-link magnetic" href="javascript:void(0)" id="emailBtn">点击显示邮箱</a>
+    <a class="email-link" href="mailto:jingbrr@163.com">jingbrr@163.com</a>
   </div>
 </section>
 
@@ -651,31 +640,7 @@ document.querySelectorAll('a, button, .work-card, .big-number-item, .email-link'
 });
 
 
-// --- 邮箱点击复制 ---
-const emailBtn = document.getElementById('emailBtn');
-const emailPopup = document.getElementById('emailPopup');
-if (emailBtn && emailPopup) {
-  emailBtn.addEventListener('click', e => {
-    e.preventDefault();
-    e.stopPropagation();
-    // 复制到剪贴板
-    const email = 'jingbrr@163.com';
-    navigator.clipboard.writeText(email).then(() => {
-      emailPopup.textContent = '已复制: jingbrr@163.com';
-      emailPopup.classList.add('show');
-      setTimeout(() => emailPopup.classList.remove('show'), 2000);
-    }).catch(() => {
-      // 降级处理
-      emailPopup.textContent = 'jingbrr@163.com';
-      emailPopup.classList.add('show');
-    });
-  });
-  document.addEventListener('click', (e) => {
-    if (!emailBtn.contains(e.target) && !emailPopup.contains(e.target)) {
-      emailPopup.classList.remove('show');
-    }
-  });
-}
+
 
 </script>
 </body>
