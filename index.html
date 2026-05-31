@@ -154,16 +154,10 @@ section{
 .grid-item:hover .hover-line{width:100%}
 
 /* --- Stats --- */
-.stats{
-  display:flex;justify-content:space-around;padding:60px 0;
-  border-top:1px solid #111;border-bottom:1px solid #111;
-}
-.stat{text-align:center}
-.stat .number{
-  font-size:48px;font-weight:800;letter-spacing:-2px;
-  color:#fff;margin-bottom:4px;
-}
-.stat .label{font-size:12px;color:#444;letter-spacing:1px;text-transform:uppercase}
+
+
+
+
 
 /* --- Contact --- */
 .contact{
@@ -203,7 +197,7 @@ footer .social a:hover{color:#fff}
   section{padding:60px 24px}
   .about-wrap{grid-template-columns:1fr;gap:30px}
   .grid{grid-template-columns:1fr 1fr}
-  .stats{flex-direction:column;gap:30px}
+  
   footer{padding:30px 24px}
 }
 </style>
@@ -336,23 +330,7 @@ document.querySelectorAll('.grid-item').forEach((item, i) => {
 });
 
 // --- 统计数字滚动动画 ---
-const statsObserver = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      const el = e.target.querySelector('.number');
-      const target = parseInt(el.textContent.replace('+',''));
-      let count = 0;
-      const timer = setInterval(() => {
-        el.textContent = (el.textContent.includes('+') ? count + '+' : count === 0 ? '∞' : count);
-        if (count >= target) clearInterval(timer);
-        count++;
-      }, 40);
-      statsObserver.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.5 });
 
-document.querySelectorAll('.stat').forEach(s => statsObserver.observe(s));
 </script>
 </body>
 </html>
