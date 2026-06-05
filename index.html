@@ -668,21 +668,14 @@ let currentTrack = 0;
 let musicFiles = [];
 let isPlaying = false;
 
-// 扫描音乐文件
-async function scanMusic() {
-  try {
-    // 尝试从music目录获取文件列表
-    const resp = await fetch('music/');
-    // 如果失败，就用预置列表
-  } catch(e) {
-    // 静默失败
-  }
-}
-
-// 添加音乐文件
-function addMusic(url, name) {
-  musicFiles.push({ url, name });
-}
+// 预设音乐列表
+musicFiles = [
+  { url: 'music/music01.mp3', name: '音乐 1' },
+  { url: 'music/music02.mp3', name: '音乐 2' },
+  { url: 'music/music03.mp3', name: '音乐 3' },
+  { url: 'music/music04.mp3', name: '音乐 4' },
+  { url: 'music/music05.mp3', name: '音乐 5' },
+];
 
 // 切换播放器显示
 function toggleMusic(e) {
@@ -784,21 +777,14 @@ let currentTrack = 0;
 let musicFiles = [];
 let isPlaying = false;
 
-// 扫描音乐文件
-async function scanMusic() {
-  try {
-    // 尝试从music目录获取文件列表
-    const resp = await fetch('music/');
-    // 如果失败，就用预置列表
-  } catch(e) {
-    // 静默失败
-  }
-}
-
-// 添加音乐文件
-function addMusic(url, name) {
-  musicFiles.push({ url, name });
-}
+// 预设音乐列表
+musicFiles = [
+  { url: 'music/music01.mp3', name: '音乐 1' },
+  { url: 'music/music02.mp3', name: '音乐 2' },
+  { url: 'music/music03.mp3', name: '音乐 3' },
+  { url: 'music/music04.mp3', name: '音乐 4' },
+  { url: 'music/music05.mp3', name: '音乐 5' },
+];
 
 // 切换播放器显示
 function toggleMusic(e) {
