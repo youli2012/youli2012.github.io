@@ -932,10 +932,7 @@ if ('serviceWorker' in navigator) {
     }
   }, 3000);
   
-  // 15秒强制解锁（兜底）
-  setTimeout(function(){
-    if (!unlocked) doUnlock();
-  }, 15000);
+
   
   function doUnlock(){
     if (unlocked) return;
