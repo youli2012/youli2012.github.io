@@ -868,7 +868,6 @@ function shuffleTrack() {
         // 随机播放一首音乐
         if (typeof musicFiles !== 'undefined' && musicFiles.length > 0) {
           var randIdx = Math.floor(Math.random() * musicFiles.length);
-          playTrack(randIdx);
           var player = document.getElementById('musicPlayer');
           var btn = document.getElementById('musicBtn');
           if (player && btn) {
@@ -881,6 +880,20 @@ function shuffleTrack() {
             }, 10);
             btn.style.opacity = '1';
           }
+          // 尝试播放（浏览器可能会阻止自动播放）
+          try {
+            playTrack(randIdx);
+          } catch(e) {}
+          // 如果播放被阻止，等用户点击页面任意位置时播放
+          var _onceClick = function() {
+            document.removeEventListener('click', _onceClick);
+            document.removeEventListener('touchstart', _onceClick);
+            if (audio && audio.paused) {
+              audio.play().catch(function(){});
+            }
+          };
+          document.addEventListener('click', _onceClick);
+          document.addEventListener('touchstart', _onceClick);
         }
       }, 800);
     }, 600);
