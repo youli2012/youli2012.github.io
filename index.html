@@ -392,6 +392,10 @@ footer .social a:hover{color:#fff}
   display:inline-block;
 }
 
+
+/* 隐藏所有audio原生控件 */
+audio { display: none !important; }
+    
 </style>
 </head>
 <body>
@@ -433,12 +437,12 @@ footer .social a:hover{color:#fff}
   </div>
 </nav>
 <!-- 音乐播放器浮层 -->
-  <div id="musicPlayer" style="display:none;position:fixed;top:80px;right:36px;background:#111;border:1px solid #1a1a1a;border-radius:20px;padding:20px 24px;min-width:160px;z-index:200;box-shadow:0 16px 48px rgba(0,0,0,0.6);opacity:0;transform:translateY(-12px) scale(0.95);transition:opacity 0.4s cubic-bezier(.4,0,.2,1),transform 0.4s cubic-bezier(.4,0,.2,1)">
-    <div style="display:flex;gap:8px;justify-content:center">
-      <button onclick="prevTrack()" style="width:44px;height:44px;border-radius:50%;background:#1a1a1a;border:1px solid #2a2a2a;color:#888;cursor:pointer;font-size:16px;transition:all 0.3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='#2a2a2a';this.style.color='#fff';this.style.transform='scale(1.1)'" onmouseout="this.style.background='#1a1a1a';this.style.color='#888';this.style.transform='scale(1)'">⏮</button>
-      <button id="playPauseBtn" onclick="togglePlay()" style="width:44px;height:44px;border-radius:50%;background:#222;border:1px solid #333;color:#ccc;cursor:pointer;font-size:18px;transition:all 0.3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='#333';this.style.color='#fff';this.style.transform='scale(1.1)'" onmouseout="this.style.background='#222';this.style.color='#ccc';this.style.transform='scale(1)'">▶</button>
-      <button onclick="nextTrack()" style="width:44px;height:44px;border-radius:50%;background:#1a1a1a;border:1px solid #2a2a2a;color:#888;cursor:pointer;font-size:16px;transition:all 0.3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='#2a2a2a';this.style.color='#fff';this.style.transform='scale(1.1)'" onmouseout="this.style.background='#1a1a1a';this.style.color='#888';this.style.transform='scale(1)'">⏭</button>
-      <button onclick="shuffleTrack()" style="width:44px;height:44px;border-radius:50%;background:#1a1a1a;border:1px solid #2a2a2a;color:#888;cursor:pointer;font-size:16px;transition:all 0.3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='#2a2a2a';this.style.color='#fff';this.style.transform='scale(1.1)'" onmouseout="this.style.background='#1a1a1a';this.style.color='#888';this.style.transform='scale(1)'">🔀</button>
+  <div id="musicPlayer" style="display:none;position:fixed;top:80px;right:36px;background:transparent;padding:0;z-index:200;opacity:0;transform:translateY(-12px);transition:opacity 0.4s ease,transform 0.4s ease" class="no-bg">
+    <div style="display:flex;gap:6px;justify-content:center;align-items:center">
+      <button onclick="prevTrack()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:none;color:#666;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.25s;backdrop-filter:blur(4px)" onmouseover="this.style.background='rgba(255,255,255,0.15)';this.style.color='#fff';this.style.transform='scale(1.15)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#666';this.style.transform='scale(1)'">⏮</button>
+      <button id="playPauseBtn" onclick="togglePlay()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;color:#999;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all 0.25s;backdrop-filter:blur(4px)" onmouseover="this.style.background='rgba(255,255,255,0.2)';this.style.color='#fff';this.style.transform='scale(1.15)'" onmouseout="this.style.background='rgba(255,255,255,0.1)';this.style.color='#999';this.style.transform='scale(1)'">▶</button>
+      <button onclick="nextTrack()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:none;color:#666;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.25s;backdrop-filter:blur(4px)" onmouseover="this.style.background='rgba(255,255,255,0.15)';this.style.color='#fff';this.style.transform='scale(1.15)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#666';this.style.transform='scale(1)'">⏭</button>
+      <button onclick="shuffleTrack()" style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.06);border:none;color:#666;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;transition:all 0.25s;backdrop-filter:blur(4px)" onmouseover="this.style.background='rgba(255,255,255,0.15)';this.style.color='#fff';this.style.transform='scale(1.15)'" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.color='#666';this.style.transform='scale(1)'">🔀</button>
     </div>
   </div>
 
@@ -753,14 +757,16 @@ function toggleMusic(e) {
   const btn = document.getElementById('musicBtn');
   if (player.style.display === 'block') {
     player.style.opacity = '0';
-    player.style.transform = 'translateY(-12px) scale(0.95)';
+    player.style.transform = 'translateY(-12px)';
     setTimeout(() => { player.style.display = 'none'; }, 400);
     btn.style.opacity = '0.5';
   } else {
     player.style.display = 'block';
+    player.style.opacity = '0';
+    player.style.transform = 'translateY(-12px)';
     setTimeout(() => {
       player.style.opacity = '1';
-      player.style.transform = 'translateY(0) scale(1)';
+      player.style.transform = 'translateY(0)';
     }, 10);
     btn.style.opacity = '1';
   }
@@ -867,9 +873,11 @@ function shuffleTrack() {
           var btn = document.getElementById('musicBtn');
           if (player && btn) {
             player.style.display = 'block';
+            player.style.opacity = '0';
+            player.style.transform = 'translateY(-12px)';
             setTimeout(function() {
               player.style.opacity = '1';
-              player.style.transform = 'translateY(0) scale(1)';
+              player.style.transform = 'translateY(0)';
             }, 10);
             btn.style.opacity = '1';
           }
