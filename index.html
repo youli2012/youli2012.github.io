@@ -701,7 +701,7 @@ function closeMusic() {
 // 播放指定曲目
 function playTrack(index) {
   if (musicFiles.length === 0) {
-    document.getElementById('nowPlaying').textContent = '暂无音乐文件';
+
     return;
   }
   if (index < 0) index = musicFiles.length - 1;
@@ -718,10 +718,10 @@ function playTrack(index) {
   audio.play().then(() => {
     isPlaying = true;
     document.getElementById('playPauseBtn').textContent = '⏸';
-    document.getElementById('nowPlaying').textContent = '♪ ' + musicFiles[currentTrack].name;
+
     document.getElementById('musicBtn').textContent = '♫';
   }).catch(e => {
-    document.getElementById('nowPlaying').textContent = '播放失败: ' + musicFiles[currentTrack].name;
+
   });
 }
 
@@ -810,7 +810,7 @@ function closeMusic() {
 // 播放指定曲目
 function playTrack(index) {
   if (musicFiles.length === 0) {
-    document.getElementById('nowPlaying').textContent = '暂无音乐文件';
+
     return;
   }
   if (index < 0) index = musicFiles.length - 1;
@@ -827,10 +827,10 @@ function playTrack(index) {
   audio.play().then(() => {
     isPlaying = true;
     document.getElementById('playPauseBtn').textContent = '⏸';
-    document.getElementById('nowPlaying').textContent = '♪ ' + musicFiles[currentTrack].name;
+
     document.getElementById('musicBtn').textContent = '♫';
   }).catch(e => {
-    document.getElementById('nowPlaying').textContent = '播放失败: ' + musicFiles[currentTrack].name;
+
   });
 }
 
