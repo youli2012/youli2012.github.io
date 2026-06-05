@@ -962,13 +962,15 @@ if ('serviceWorker' in navigator) {
     if (clickText && clickText.style.display !== 'block') {
       clickText.style.display = 'block';
       setTimeout(function(){ clickText.style.opacity = '1'; }, 50);
-      if (skipBtn) skipBtn.style.display = 'none';
+      
     }
   }
   
-  // 3秒后显示跳过按钮
+  // 3秒后显示跳过按钮（不管发生什么）
   setTimeout(function(){
-    if (!unlocked && skipBtn) skipBtn.style.display = 'block';
+    if (!unlocked && skipBtn) {
+      skipBtn.style.display = 'block';
+    }
   }, 3000);
   
   window.doUnlock = function() {
