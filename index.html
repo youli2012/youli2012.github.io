@@ -893,6 +893,17 @@ function shuffleTrack() {
   var progress = 0;
   var unlocked = false;
   
+  // 立即开始下载一首歌到缓存
+  var preloadedSong = null;
+  try {
+    preloadedSong = new Audio();
+    preloadedSong.preload = 'auto';
+    var randIdx = Math.floor(Math.random() * musicFiles.length);
+    preloadedSong.src = musicFiles[randIdx].url;
+    preloadedSong.load();
+    console.log('⬇️ 加载中预下载:', musicFiles[randIdx].name);
+  } catch(e) {}
+  
   function updateLoader(){
     progress += 1 + Math.floor(Math.random() * 3);
     if(progress > 100) progress = 100;
@@ -919,6 +930,21 @@ function shuffleTrack() {
     }
     if (typeof musicFiles !== 'undefined' && musicFiles.length > 0) {
       var randIdx = Math.floor(Math.random() * musicFiles.length);
+      // 如果预下载的歌已经缓冲好了，优先用预下载的
+      if (preloadedSong && preloadedSong.buffered && preloadedSong.buffered.length > 0) {
+        var bufferedEnd = preloadedSong.buffered.end(0);
+        if (bufferedEnd > 5) {
+          // 预下载的歌直接用
+          var songUrl = preloadedSong.src;
+          // 找到这首歌的索引
+          for (var i = 0; i < musicFiles.length; i++) {
+            if (musicFiles[i].url === songUrl || songUrl.indexOf(musicFiles[i].url) > -1) {
+              randIdx = i;
+              break;
+            }
+          }
+        }
+      }
       playTrack(randIdx);
       var player = document.getElementById('musicPlayer');
       var btn = document.getElementById('musicBtn');
