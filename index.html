@@ -373,7 +373,7 @@ footer .social a:hover{color:#fff}
     <a href="javascript:void(0)" id="musicBtn" style="position:relative;opacity:0.5" onclick="toggleMusic(event)" title="播放音乐">♪</a>
   </div>
 </nav>
-    <!-- 音乐播放器浮层 -->
+<!-- 音乐播放器浮层 -->
   <div id="musicPlayer" style="display:none;position:fixed;top:80px;right:36px;background:#111;border:1px solid #1a1a1a;border-radius:20px;padding:20px 24px;min-width:160px;z-index:200;box-shadow:0 16px 48px rgba(0,0,0,0.6);opacity:0;transform:translateY(-12px) scale(0.95);transition:opacity 0.4s cubic-bezier(.4,0,.2,1),transform 0.4s cubic-bezier(.4,0,.2,1)">
     <div style="display:flex;gap:8px;justify-content:center">
       <button onclick="prevTrack()" style="width:44px;height:44px;border-radius:50%;background:#1a1a1a;border:1px solid #2a2a2a;color:#888;cursor:pointer;font-size:16px;transition:all 0.3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='#2a2a2a';this.style.color='#fff';this.style.transform='scale(1.1)'" onmouseout="this.style.background='#1a1a1a';this.style.color='#888';this.style.transform='scale(1)'">⏮</button>
@@ -687,19 +687,23 @@ musicFiles = [
   { url: 'music/music05.mp3', name: '音乐 5' },
 ];
 
-// 切换播放器显示
+// 切换播放器显示（带动画）
 function toggleMusic(e) {
   e.preventDefault();
   const player = document.getElementById('musicPlayer');
   const btn = document.getElementById('musicBtn');
   if (player.style.display === 'block') {
-    player.style.display = 'none';
+    player.style.opacity = '0';
+    player.style.transform = 'translateY(-12px) scale(0.95)';
+    setTimeout(() => { player.style.display = 'none'; }, 400);
     btn.style.opacity = '0.5';
   } else {
     player.style.display = 'block';
+    setTimeout(() => {
+      player.style.opacity = '1';
+      player.style.transform = 'translateY(0) scale(1)';
+    }, 10);
     btn.style.opacity = '1';
-    // 如果没有音频文件，尝试扫描
-    if (musicFiles.length === 0) scanMusic();
   }
 }
 
@@ -723,7 +727,7 @@ function playTrack(index) {
     audio.src = '';
   }
   
-  audio = new Audio(musicFiles[currentTrack].url); audio.controls = false;
+  audio = new Audio(musicFiles[currentTrack].url);
   audio.controls = false;
   audio.addEventListener('ended', () => nextTrack());
   audio.play().then(() => {
@@ -780,82 +784,6 @@ function copyEmail(e){
     tip.style.display = 'block';
     setTimeout(function(){tip.style.display = 'none';}, 1500);
   }
-}
-
-// --- 音乐播放器 ---
-let audio = null;
-let currentTrack = 0;
-let musicFiles = [];
-let isPlaying = false;
-
-// 预设音乐列表
-musicFiles = [
-  { url: 'music/music01.mp3', name: '音乐 1' },
-  { url: 'music/music02.mp3', name: '音乐 2' },
-  { url: 'music/music03.mp3', name: '音乐 3' },
-  { url: 'music/music04.mp3', name: '音乐 4' },
-  { url: 'music/music05.mp3', name: '音乐 5' },
-];
-
-// 切换播放器显示
-function closeMusic() {
-  document.getElementById('musicPlayer').style.display = 'none';
-  document.getElementById('musicBtn').style.opacity = '0.5';
-}
-
-// 播放指定曲目
-function playTrack(index) {
-  if (musicFiles.length === 0) {
-
-    return;
-  }
-  if (index < 0) index = musicFiles.length - 1;
-  if (index >= musicFiles.length) index = 0;
-  currentTrack = index;
-  
-  if (audio) {
-    audio.pause();
-    audio.src = '';
-  }
-  
-  audio = new Audio(musicFiles[currentTrack].url); audio.controls = false;
-  audio.controls = false;
-  audio.addEventListener('ended', () => nextTrack());
-  audio.play().then(() => {
-    isPlaying = true;
-    document.getElementById('playPauseBtn').textContent = '⏸';
-
-    document.getElementById('musicBtn').textContent = '♫';
-  }).catch(e => {
-
-  });
-}
-
-function togglePlay() {
-  if (!audio) return;
-  if (isPlaying) {
-    audio.pause();
-    isPlaying = false;
-    document.getElementById('playPauseBtn').textContent = '▶';
-  } else {
-    audio.play();
-    isPlaying = true;
-    document.getElementById('playPauseBtn').textContent = '⏸';
-  }
-}
-
-function nextTrack() {
-  playTrack(currentTrack + 1);
-}
-
-function prevTrack() {
-  playTrack(currentTrack - 1);
-}
-
-function shuffleTrack() {
-  if (musicFiles.length === 0) return;
-  const rand = Math.floor(Math.random() * musicFiles.length);
-  playTrack(rand);
 }
 
 </script>
