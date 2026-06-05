@@ -963,6 +963,14 @@ if ('serviceWorker' in navigator) {
     
   } catch(e) {}
   
+  // 3秒后显示跳过按钮
+  setTimeout(function() {
+    var skipEl = document.getElementById('skipBtn');
+    if (skipEl && progress < 100) {
+      skipEl.style.display = 'block';
+    }
+  }, 3000);
+  
   // 兜底：15秒后如果还没到100也显示点击开始
   setTimeout(function() {
     if (progress < 100) {
