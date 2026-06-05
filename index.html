@@ -724,6 +724,7 @@ function playTrack(index) {
   }
   
   audio = new Audio(musicFiles[currentTrack].url);
+  audio.controls = false;
   audio.addEventListener('ended', () => nextTrack());
   audio.play().then(() => {
     isPlaying = true;
@@ -818,6 +819,7 @@ function playTrack(index) {
   }
   
   audio = new Audio(musicFiles[currentTrack].url);
+  audio.controls = false;
   audio.addEventListener('ended', () => nextTrack());
   audio.play().then(() => {
     isPlaying = true;
