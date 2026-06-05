@@ -893,31 +893,63 @@ function shuffleTrack() {
   var progress = 0;
   var unlocked = false;
   
-  // 立即开始下载一首歌到缓存
+  // 下载一首随机歌曲，进度条跟随缓冲进度
   var preloadedSong = null;
+  var preloadedIdx = 0;
   try {
     preloadedSong = new Audio();
     preloadedSong.preload = 'auto';
-    var randIdx = Math.floor(Math.random() * musicFiles.length);
-    preloadedSong.src = musicFiles[randIdx].url;
+    preloadedIdx = Math.floor(Math.random() * musicFiles.length);
+    preloadedSong.src = musicFiles[preloadedIdx].url;
     preloadedSong.load();
-    console.log('⬇️ 加载中预下载:', musicFiles[randIdx].name);
+    console.log('⬇️ 加载中预下载:', musicFiles[preloadedIdx].name);
+    
+    // 监听缓冲进度更新加载条
+    preloadedSong.addEventListener('progress', function() {
+      if (preloadedSong.buffered && preloadedSong.buffered.length > 0) {
+        var bufferedEnd = preloadedSong.buffered.end(0);
+        var duration = preloadedSong.duration || 30;
+        var pct = Math.min(Math.round((bufferedEnd / duration) * 100), 100);
+        if (pct > progress) {
+          progress = pct;
+          if(numEl) numEl.textContent = progress;
+          if(lineEl) lineEl.style.width = (progress * 2.2) + 'px';
+          if (progress >= 100 && clickText) {
+            clickText.style.display = 'block';
+            setTimeout(function() { clickText.style.opacity = '1'; }, 100);
+          }
+        }
+      }
+    });
+    
+    // 下载完成时确保100%
+    preloadedSong.addEventListener('canplaythrough', function() {
+      progress = 100;
+      if(numEl) numEl.textContent = '100';
+      if(lineEl) lineEl.style.width = '220px';
+      if(clickText) {
+        clickText.style.display = 'block';
+        setTimeout(function() { clickText.style.opacity = '1'; }, 100);
+      }
+    });
+    
   } catch(e) {}
   
-  function updateLoader(){
-    progress += 1 + Math.floor(Math.random() * 3);
-    if(progress > 100) progress = 100;
-    if(numEl) numEl.textContent = progress;
-    if(lineEl) lineEl.style.width = (progress * 2.2) + 'px';
-    if(progress < 100){
-      setTimeout(updateLoader, 30 + Math.floor(Math.random() * 60));
-    } else {
+  // 兜底：15秒后如果还没到100也显示点击开始
+  setTimeout(function() {
+    if (progress < 100) {
+      progress = 100;
+      if(numEl) numEl.textContent = '100';
+      if(lineEl) lineEl.style.width = '220px';
       if(clickText) {
         clickText.style.display = 'block';
         setTimeout(function() { clickText.style.opacity = '1'; }, 100);
       }
     }
-  }
+  }, 15000);
+  
+  // 加载进度直接从0开始（等音频缓冲更新）
+  function updateLoader(){}
   
   function doUnlock() {
     if (unlocked) return;
