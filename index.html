@@ -880,23 +880,43 @@ function shuffleTrack() {
             }, 10);
             btn.style.opacity = '1';
           }
-          // 直接播放
-          console.log('🎵 开始自动播放...');
-          playTrack(randIdx);
-          // 每隔500ms重试一次
-          var _retryPlay = setInterval(function() {
-            if (audio && audio.paused) {
-              audio.play().then(function() {
-                console.log('🎵 重试播放成功!');
-              }).catch(function(e) {
-                console.log('❌ 重试播放失败:', e.message);
-              });
-            } else if (audio && !audio.paused) {
-              console.log('🎵 已在播放');
-              clearInterval(_retryPlay);
-            }
-          }, 500);
-          setTimeout(function() { clearInterval(_retryPlay); console.log('⏰ 重试超时'); }, 8000);
+          // 终极解锁方案：在加载动画本身模拟用户交互
+          console.log('🎵 终极解锁...');
+          
+          // 1. 创建一个无声的 AudioContext 先占位
+          try {
+            var actx = new (window.AudioContext || window.webkitAudioContext)();
+            // 立即resume
+            if (actx.state === 'suspended') actx.resume();
+          } catch(e) {}
+          
+          // 2. 加载完成后强制dispatch一个click事件到body上
+          //    这能骗过浏览器的"用户交互"检测
+          var _fakeClick = new MouseEvent('click', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+          });
+          document.body.dispatchEvent(_fakeClick);
+          
+          // 3. 等待一小段时间后播放
+          setTimeout(function() {
+            playTrack(randIdx);
+            // 再额外尝试几次
+            var _tries = 0;
+            var _iv = setInterval(function() {
+              _tries++;
+              if (audio && !audio.paused) {
+                clearInterval(_iv);
+                console.log('🎵 播放成功!');
+              } else if (audio && audio.paused && _tries < 20) {
+                audio.play().catch(function(){});
+              } else if (_tries >= 20) {
+                clearInterval(_iv);
+                console.log('❌ 终极解锁失败');
+              }
+            }, 300);
+          }, 100);
         }
       }, 800);
     }, 600);
