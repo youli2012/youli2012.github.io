@@ -736,6 +736,47 @@ if (copyBtn && toast) {
 }
 
 
+// --- 预加载下一首音乐（解决网络卡顿） ---
+var preloadAudio = null;
+function preloadNext() {
+  var nextIdx = currentTrack + 1;
+  if (nextIdx >= musicFiles.length) nextIdx = 0;
+  try {
+    if (preloadAudio) {
+      preloadAudio.src = '';
+      preloadAudio = null;
+    }
+    var nextUrl = musicFiles[nextIdx].url;
+    // 使用Link prefetch或者提前创建Audio对象
+    var link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'audio';
+    link.href = nextUrl;
+    document.head.appendChild(link);
+    
+    // 同时创建隐藏的Audio对象开始缓冲
+    preloadAudio = new Audio();
+    preloadAudio.preload = 'auto';
+    preloadAudio.src = nextUrl;
+    preloadAudio.load();
+    
+    console.log('🎵 预加载下一首:', musicFiles[nextIdx].name);
+  } catch(e) {}
+}
+
+// 增加当前音频的缓冲量
+function buffUp() {
+  if (audio && audio.buffered && audio.buffered.length > 0) {
+    var buffered = audio.buffered.end(0);
+    var duration = audio.duration;
+    if (duration > 0) {
+      var pct = (buffered / duration * 100).toFixed(0);
+      console.log('📦 缓冲进度: ' + pct + '%');
+    }
+  }
+}
+setInterval(buffUp, 5000);
+
 // --- 音乐播放器 ---
 let audio = null;
 let currentTrack = 0;
@@ -800,7 +841,11 @@ function playTrack(index) {
   
   audio = new Audio(musicFiles[currentTrack].url);
   audio.controls = false;
+  audio.preload = 'auto';
   audio.addEventListener('ended', () => nextTrack());
+  
+  // 预加载下一首歌
+  preloadNext();
   audio.play().then(() => {
     isPlaying = true;
     document.getElementById('playPauseBtn').textContent = '⏸';
