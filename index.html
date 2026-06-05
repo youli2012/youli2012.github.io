@@ -834,109 +834,72 @@ function shuffleTrack() {
 }
 
 
-// --- 加载界面 ---
+// --- 加载界面 + 交互解锁 ---
 (function(){
-  const loader = document.getElementById('loader');
-  const numEl = document.getElementById('loaderNum');
-  const lineEl = document.querySelector('.loader-line');
-  let progress = 0;
+  var loader = document.getElementById('loader');
+  var numEl = document.getElementById('loaderNum');
+  var lineEl = document.querySelector('.loader-line');
+  var clickText = document.getElementById('clickToStart');
+  var progress = 0;
+  var unlocked = false;
   
   function updateLoader(){
     progress += 1 + Math.floor(Math.random() * 3);
     if(progress > 100) progress = 100;
-    numEl.textContent = progress;
+    if(numEl) numEl.textContent = progress;
     if(lineEl) lineEl.style.width = (progress * 2.2) + 'px';
     if(progress < 100){
       setTimeout(updateLoader, 30 + Math.floor(Math.random() * 60));
     } else {
-      setTimeout(() => {
-        loader.classList.add('hide');
-        setTimeout(() => { loader.style.display = 'none'; }, 800);
-      }, 400);
+      if(clickText) {
+        clickText.style.display = 'block';
+        setTimeout(function() { clickText.style.opacity = '1'; }, 100);
+      }
     }
   }
   
-  // 页面加载完成后自动结束加载并播放音乐
-  var _startAutoPlay = function() {
-    if (progress >= 100) return;
-    progress = 100;
-    if (numEl) numEl.textContent = '100';
-    if (lineEl) lineEl.style.width = '220px';
-    setTimeout(function() {
-      if (loader) loader.classList.add('hide');
+  function doUnlock() {
+    if (unlocked) return;
+    unlocked = true;
+    if(loader) {
+      loader.classList.add('hide');
       setTimeout(function() {
-        if (loader) loader.style.display = 'none';
-        // 随机播放一首音乐
-        if (typeof musicFiles !== 'undefined' && musicFiles.length > 0) {
-          var randIdx = Math.floor(Math.random() * musicFiles.length);
-          var player = document.getElementById('musicPlayer');
-          var btn = document.getElementById('musicBtn');
-          if (player && btn) {
-            player.style.display = 'block';
-            player.style.opacity = '0';
-            player.style.transform = 'translateY(-12px)';
-            setTimeout(function() {
-              player.style.opacity = '1';
-              player.style.transform = 'translateY(0)';
-            }, 10);
-            btn.style.opacity = '1';
-          }
-          // 终极解锁方案：在加载动画本身模拟用户交互
-          console.log('🎵 终极解锁...');
-          
-          // 1. 创建一个无声的 AudioContext 先占位
-          try {
-            var actx = new (window.AudioContext || window.webkitAudioContext)();
-            // 立即resume
-            if (actx.state === 'suspended') actx.resume();
-          } catch(e) {}
-          
-          // 2. 加载完成后强制dispatch一个click事件到body上
-          //    这能骗过浏览器的"用户交互"检测
-          var _fakeClick = new MouseEvent('click', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          });
-          document.body.dispatchEvent(_fakeClick);
-          
-          // 3. 等待一小段时间后播放
-          setTimeout(function() {
-            playTrack(randIdx);
-            // 再额外尝试几次
-            var _tries = 0;
-            var _iv = setInterval(function() {
-              _tries++;
-              if (audio && !audio.paused) {
-                clearInterval(_iv);
-                console.log('🎵 播放成功!');
-              } else if (audio && audio.paused && _tries < 20) {
-                audio.play().catch(function(){});
-              } else if (_tries >= 20) {
-                clearInterval(_iv);
-                console.log('❌ 终极解锁失败');
-              }
-            }, 300);
-          }, 100);
-        }
+        if(loader) loader.style.display = 'none';
       }, 800);
-    }, 600);
-  };
-  
-  // 页面load时自动触发
-  if (document.readyState === 'complete') {
-    setTimeout(_startAutoPlay, 200);
-  } else {
-    window.addEventListener('load', _startAutoPlay);
+    }
+    if (typeof musicFiles !== 'undefined' && musicFiles.length > 0) {
+      var randIdx = Math.floor(Math.random() * musicFiles.length);
+      playTrack(randIdx);
+      var player = document.getElementById('musicPlayer');
+      var btn = document.getElementById('musicBtn');
+      if (player && btn) {
+        player.style.display = 'block';
+        player.style.opacity = '0';
+        player.style.transform = 'translateY(-12px)';
+        setTimeout(function() {
+          player.style.opacity = '1';
+          player.style.transform = 'translateY(0)';
+        }, 10);
+        btn.style.opacity = '1';
+      }
+    }
   }
   
-  // 如果5秒后还没load完也强制播放
-  setTimeout(function() {
-    if (progress < 100) _startAutoPlay();
-  }, 5000);
+  document.addEventListener('click', function(e) {
+    if (!unlocked && progress >= 100) doUnlock();
+  });
+  document.addEventListener('touchstart', function(e) {
+    if (!unlocked && progress >= 100) doUnlock();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (!unlocked && progress >= 100) doUnlock();
+  });
   
-  // 开始动画
   setTimeout(updateLoader, 300);
+  
+  setTimeout(function() {
+    if (!unlocked) doUnlock();
+  }, 10000);
 })();
 
 </script>
