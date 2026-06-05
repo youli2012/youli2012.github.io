@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -416,7 +416,6 @@ audio { display: none !important; }
     </div>
     <div class="loader-percent"><span id="loaderNum">0</span>%</div>
     <div id="clickToStart" style="display:none;margin-top:40px;font-size:12px;color:#444;letter-spacing:3px;cursor:pointer;opacity:0;transition:opacity .6s ease">点击任意处开始 →</div>
-    <div id="skipBtn" style="display:none;margin-top:16px;font-size:11px;color:#333;letter-spacing:2px;cursor:pointer;transition:opacity .3s">跳过等待 →</div>
   </div>
 </div>
 
@@ -517,20 +516,6 @@ audio { display: none !important; }
 </footer>
 
 <script>
-<script>
-// --- 加载界面 ---
-(function(){
-var L=document.getElementById("loader");var N=document.getElementById("loaderNum");var B=document.querySelector(".loader-line");var T=document.getElementById("clickToStart");var S=document.getElementById("skipBtn");var pct=0,ok=false,blob=null,idx=0;if(!L)return;
-function anim(){pct+=2+Math.floor(Math.random()*3);if(pct>100)pct=100;if(N)N.textContent=pct;if(B)B.style.width=(pct*2.2)+"px";if(pct>=100)show();else setTimeout(anim,25)}anim();
-var songs=[{url:"music/music01.mp3"},{url:"music/music02.mp3"},{url:"music/music03.mp3"},{url:"music/music04.mp3"},{url:"music/music05.mp3"},{url:"music/music06.mp3"},{url:"music/music07.mp3"},{url:"music/music08.mp3"},{url:"music/music09.mp3"},{url:"music/music10.mp3"}];
-idx=Math.floor(Math.random()*songs.length);var x=new XMLHttpRequest();x.open("GET",songs[idx].url,true);x.responseType="blob";
-x.onload=function(){if(x.status==200){blob=x.response}};x.send();
-setTimeout(function(){if(!ok&&S)S.style.display="block"},3000);
-function show(){if(ok)return;ok=true;if(T){T.style.display="block";setTimeout(function(){T.style.opacity="1"},50)}}
-function unlock(){if(L){L.style.transition="opacity 0.6s";L.style.opacity="0";L.style.pointerEvents="none";setTimeout(function(){if(L)L.style.display="none"},600)}if(blob){var u=URL.createObjectURL(blob);window.audio=new Audio(u);window.audio.controls=false;window.audio.play();window.audio.addEventListener("ended",function(){if(typeof nextTrack==="function")nextTrack()});window.isPlaying=true;window.currentTrack=idx}else{playTrack(idx)}var P=document.getElementById("musicPlayer");var Btn=document.getElementById("musicBtn");if(P&&Btn){P.style.display="block";P.style.opacity="0";P.style.transform="translateY(-12px)";setTimeout(function(){P.style.opacity="1";P.style.transform="translateY(0)"},10);Btn.style.opacity="1"}}
-document.addEventListener("click",function(){if(ok||blob)unlock()});document.addEventListener("touchstart",function(){if(ok||blob)unlock()});if(S)S.onclick=unlock;
-})();
-
 // --- 鼠标光晕 ---
 const glow = document.getElementById('glow');
 document.addEventListener('mousemove', e => {
@@ -751,49 +736,6 @@ if (copyBtn && toast) {
 }
 
 
-</script>
-
-// --- 预加载下一首音乐（解决网络卡顿） ---
-var preloadAudio = null;
-function preloadNext() {
-  var nextIdx = currentTrack + 1;
-  if (nextIdx >= musicFiles.length) nextIdx = 0;
-  try {
-    if (preloadAudio) {
-      preloadAudio.src = '';
-      preloadAudio = null;
-    }
-    var nextUrl = musicFiles[nextIdx].url;
-    // 使用Link prefetch或者提前创建Audio对象
-    var link = document.createElement('link');
-    link.rel = 'preload';
-    link.as = 'audio';
-    link.href = nextUrl;
-    document.head.appendChild(link);
-    
-    // 同时创建隐藏的Audio对象开始缓冲
-    preloadAudio = new Audio();
-    preloadAudio.preload = 'auto';
-    preloadAudio.src = nextUrl;
-    preloadAudio.load();
-    
-    console.log('🎵 预加载下一首:', musicFiles[nextIdx].name);
-  } catch(e) {}
-}
-
-// 增加当前音频的缓冲量
-function buffUp() {
-  if (audio && audio.buffered && audio.buffered.length > 0) {
-    var buffered = audio.buffered.end(0);
-    var duration = audio.duration;
-    if (duration > 0) {
-      var pct = (buffered / duration * 100).toFixed(0);
-      console.log('📦 缓冲进度: ' + pct + '%');
-    }
-  }
-}
-setInterval(buffUp, 5000);
-
 // --- 音乐播放器 ---
 let audio = null;
 let currentTrack = 0;
@@ -807,11 +749,6 @@ musicFiles = [
   { url: 'music/music03.mp3', name: '音乐 3' },
   { url: 'music/music04.mp3', name: '音乐 4' },
   { url: 'music/music05.mp3', name: '音乐 5' },
-  { url: 'music/music06.mp3', name: '音乐 6' },
-  { url: 'music/music07.mp3', name: '音乐 7' },
-  { url: 'music/music08.mp3', name: '音乐 8' },
-  { url: 'music/music09.mp3', name: '音乐 9' },
-  { url: 'music/music10.mp3', name: '音乐 10' },
 ];
 
 // 切换播放器显示（带动画）
@@ -856,18 +793,9 @@ function playTrack(index) {
     audio.src = '';
   }
   
-  var songUrl = musicFiles[currentTrack].url;
-  // 如果有Blob缓存就用Blob URL（本地播放，完全不卡）
-  if (window._blobUrls && window._blobUrls[songUrl]) {
-    songUrl = window._blobUrls[songUrl];
-  }
-  audio = new Audio(songUrl);
+  audio = new Audio(musicFiles[currentTrack].url);
   audio.controls = false;
-  audio.preload = 'auto';
   audio.addEventListener('ended', () => nextTrack());
-  
-  // 预加载下一首歌
-  preloadNext();
   audio.play().then(() => {
     isPlaying = true;
     document.getElementById('playPauseBtn').textContent = '⏸';
@@ -906,83 +834,94 @@ function shuffleTrack() {
 }
 
 
-// --- 注册Service Worker（缓存音乐到本地） ---
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').then(function() {
-    console.log('✅ SW注册成功，音乐将缓存到本地');
-  }).catch(function(e) {
-    console.log('❌ SW注册失败:', e);
-  });
-}
-
-<script>
-// --- 加载界面 ---
+// --- 加载界面 + 交互解锁 ---
 (function(){
-  var L = document.getElementById('loader');
-  var N = document.getElementById('loaderNum');
-  var B = document.querySelector('.loader-line');
-  var T = document.getElementById('clickToStart');
-  var S = document.getElementById('skipBtn');
-  var pct = 0, ok = false, blob = null, idx = 0, url = '';
-  if (!L) return;
+  var loader = document.getElementById('loader');
+  var numEl = document.getElementById('loaderNum');
+  var lineEl = document.querySelector('.loader-line');
+  var clickText = document.getElementById('clickToStart');
+  var progress = 0;
+  var unlocked = false;
   
-  // 动画：从0走到100，大约2秒
-  function anim() {
-    pct += 2 + Math.floor(Math.random() * 3);
-    if (pct > 100) pct = 100;
-    if (N) N.textContent = pct;
-    if (B) B.style.width = (pct * 2.2) + 'px';
-    if (pct >= 100) show();
-    else setTimeout(anim, 25);
-  }
-  anim();
-  
-  // 同时后台下载一首歌（用于播放）
-  var songs = [
-    { url: 'music/music01.mp3' }, { url: 'music/music02.mp3' },
-    { url: 'music/music03.mp3' }, { url: 'music/music04.mp3' },
-    { url: 'music/music05.mp3' }, { url: 'music/music06.mp3' },
-    { url: 'music/music07.mp3' }, { url: 'music/music08.mp3' },
-    { url: 'music/music09.mp3' }, { url: 'music/music10.mp3' }
-  ];
-  idx = Math.floor(Math.random() * songs.length);
-  url = songs[idx].url;
-  var x = new XMLHttpRequest();
-  x.open('GET', url, true);
-  x.responseType = 'blob';
-  x.onload = function() { if (x.status==200) { blob=x.response; } };
-  x.send();
-  
-  // 3秒后显示跳过按钮
-  setTimeout(function(){ if (!ok && S) S.style.display='block'; }, 3000);
-  
-  function show() {
-    if (ok) return; ok = true;
-    if (T) { T.style.display='block'; setTimeout(function(){ T.style.opacity='1'; }, 50); }
+  function updateLoader(){
+    progress += 1 + Math.floor(Math.random() * 3);
+    if(progress > 100) progress = 100;
+    if(numEl) numEl.textContent = progress;
+    if(lineEl) lineEl.style.width = (progress * 2.2) + 'px';
+    if(progress < 100){
+      setTimeout(updateLoader, 30 + Math.floor(Math.random() * 60));
+    } else {
+      if(clickText) {
+        clickText.style.display = 'block';
+        setTimeout(function() { clickText.style.opacity = '1'; }, 100);
+      }
+    }
   }
   
-  function unlock() {
-    if (L) { L.style.transition='opacity 0.6s'; L.style.opacity='0'; L.style.pointerEvents='none'; setTimeout(function(){ if(L) L.style.display='none'; }, 600); }
-    if (blob) {
-      var u = URL.createObjectURL(blob);
-      window.audio = new Audio(u);
-      window.audio.controls = false;
-      window.audio.play();
-      window.audio.addEventListener('ended', function(){ if(typeof nextTrack==='function') nextTrack(); });
-      window.isPlaying = true;
-      window.currentTrack = idx;
-    } else { playTrack(idx); }
-    var P = document.getElementById('musicPlayer');
-    var Btn = document.getElementById('musicBtn');
-    if (P && Btn) { P.style.display='block'; P.style.opacity='0'; P.style.transform='translateY(-12px)'; setTimeout(function(){ P.style.opacity='1'; P.style.transform='translateY(0)'; }, 10); Btn.style.opacity='1'; }
+  function doUnlock() {
+    if (unlocked) return;
+    unlocked = true;
+    if(loader) {
+      loader.classList.add('hide');
+      setTimeout(function() {
+        if(loader) loader.style.display = 'none';
+      }, 800);
+    }
+    if (typeof musicFiles !== 'undefined' && musicFiles.length > 0) {
+      var randIdx = Math.floor(Math.random() * musicFiles.length);
+      playTrack(randIdx);
+      var player = document.getElementById('musicPlayer');
+      var btn = document.getElementById('musicBtn');
+      if (player && btn) {
+        player.style.display = 'block';
+        player.style.opacity = '0';
+        player.style.transform = 'translateY(-12px)';
+        setTimeout(function() {
+          player.style.opacity = '1';
+          player.style.transform = 'translateY(0)';
+        }, 10);
+        btn.style.opacity = '1';
+      }
+    }
   }
   
-  document.addEventListener('click', function(){ if (ok || blob) unlock(); });
-  document.addEventListener('touchstart', function(){ if (ok || blob) unlock(); });
-  if (S) S.onclick = unlock;
+  document.addEventListener('click', function(e) {
+    if (!unlocked && progress >= 100) doUnlock();
+  });
+  document.addEventListener('touchstart', function(e) {
+    if (!unlocked && progress >= 100) doUnlock();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (!unlocked && progress >= 100) doUnlock();
+  });
+  
+  setTimeout(updateLoader, 300);
+  
+  setTimeout(function() {
+    if (!unlocked) doUnlock();
+  }, 10000);
 })();
 
 </script>
+<div id="copyToast" style="position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 24px;border-radius:8px;font-size:13px;border:1px solid #333;display:none;z-index:99999;white-space:nowrap">已复制 jingbrr@163.com ✓</div>
+
+<script>
+function copyEmail(e){
+  e.preventDefault();
+  var input = document.createElement('input');
+  input.value = 'jingbrr@163.com';
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand('copy');
+  document.body.removeChild(input);
+  var tip = document.getElementById('copyToast');
+  if(tip){
+    tip.style.display = 'block';
+    setTimeout(function(){tip.style.display = 'none';}, 1500);
+  }
+}
+
 </script>
 
-
+</body>
+</html>" "  
