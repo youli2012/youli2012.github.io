@@ -857,7 +857,25 @@ function shuffleTrack() {
     if(lineEl) lineEl.style.width = '220px';
     setTimeout(() => {
       loader.classList.add('hide');
-      setTimeout(() => { loader.style.display = 'none'; }, 800);
+      setTimeout(() => {
+        loader.style.display = 'none';
+        // 随机播放一首音乐
+        if (typeof musicFiles !== 'undefined' && musicFiles.length > 0) {
+          var randIdx = Math.floor(Math.random() * musicFiles.length);
+          playTrack(randIdx);
+          // 打开播放器显示
+          var player = document.getElementById('musicPlayer');
+          var btn = document.getElementById('musicBtn');
+          if (player && btn) {
+            player.style.display = 'block';
+            setTimeout(function() {
+              player.style.opacity = '1';
+              player.style.transform = 'translateY(0) scale(1)';
+            }, 10);
+            btn.style.opacity = '1';
+          }
+        }
+      }, 800);
     }, 600);
   });
   
