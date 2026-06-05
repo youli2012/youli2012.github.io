@@ -799,8 +799,9 @@ function playTrack(index) {
     isPlaying = true;
     document.getElementById('playPauseBtn').textContent = '⏸';
     document.getElementById('musicBtn').textContent = '♫';
-  }).catch(function() {
-    // 静默失败，重试机制在外面处理
+    console.log('🎵 播放成功:', musicFiles[currentTrack].url);
+  }).catch(function(e) {
+    console.log('❌ 播放失败:', e.message);
   });
 }
 
@@ -879,18 +880,23 @@ function shuffleTrack() {
             }, 10);
             btn.style.opacity = '1';
           }
-          // 直接播放（用各种方式尝试绕过浏览器限制）
+          // 直接播放
+          console.log('🎵 开始自动播放...');
           playTrack(randIdx);
-          // 每隔500ms重试一次，直到成功播放
+          // 每隔500ms重试一次
           var _retryPlay = setInterval(function() {
             if (audio && audio.paused) {
-              audio.play().catch(function(){});
+              audio.play().then(function() {
+                console.log('🎵 重试播放成功!');
+              }).catch(function(e) {
+                console.log('❌ 重试播放失败:', e.message);
+              });
             } else if (audio && !audio.paused) {
+              console.log('🎵 已在播放');
               clearInterval(_retryPlay);
             }
           }, 500);
-          // 8秒后停止重试
-          setTimeout(function() { clearInterval(_retryPlay); }, 8000);
+          setTimeout(function() { clearInterval(_retryPlay); console.log('⏰ 重试超时'); }, 8000);
         }
       }, 800);
     }, 600);
