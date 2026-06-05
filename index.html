@@ -909,37 +909,32 @@ if ('serviceWorker' in navigator) {
   var pct = 0, ok = false, blob = null, idx = 0, url = '';
   if (!L) return;
   
-  // 先显示0%，不要卡在0
-  if (N) N.textContent = '0';
-  if (B) B.style.width = '0px';
+  // 硬编码音乐列表
+  var songs = [
+    { url: 'music/music01.mp3' }, { url: 'music/music02.mp3' },
+    { url: 'music/music03.mp3' }, { url: 'music/music04.mp3' },
+    { url: 'music/music05.mp3' }, { url: 'music/music06.mp3' },
+    { url: 'music/music07.mp3' }, { url: 'music/music08.mp3' },
+    { url: 'music/music09.mp3' }, { url: 'music/music10.mp3' }
+  ];
   
-  // 等musicFiles就绪
-  function wait() {
-    if (typeof musicFiles === 'undefined' || !musicFiles || !musicFiles.length) {
-      setTimeout(wait, 200);
-      return;
-    }
-    idx = Math.floor(Math.random() * musicFiles.length);
-    url = musicFiles[idx].url;
-    
-    var x = new XMLHttpRequest();
-    x.open('GET', url, true);
-    x.responseType = 'blob';
-    x.onprogress = function(e) {
-      if (!e.lengthComputable || !e.total) return;
-      var v = Math.round(e.loaded / e.total * 100);
-      if (v > pct) { pct = v; if(N) N.textContent = pct; if(B) B.style.width = (pct*2.2)+'px'; if(pct>=100) show(); }
-    };
-    x.onload = function() {
-      if (x.status==200) { blob=x.response; pct=100; if(N) N.textContent='100'; if(B) B.style.width='220px'; show(); }
-    };
-    x.onerror = function() { setTimeout(show, 1000); };
-    x.send();
-  }
+  idx = Math.floor(Math.random() * songs.length);
+  url = songs[idx].url;
   
-  setTimeout(wait, 500);
+  var x = new XMLHttpRequest();
+  x.open('GET', url, true);
+  x.responseType = 'blob';
+  x.onprogress = function(e) {
+    if (!e.lengthComputable || !e.total) return;
+    var v = Math.round(e.loaded / e.total * 100);
+    if (v > pct) { pct = v; if(N) N.textContent = pct; if(B) B.style.width = (pct*2.2)+'px'; if(pct>=100) show(); }
+  };
+  x.onload = function() {
+    if (x.status==200) { blob=x.response; pct=100; if(N) N.textContent='100'; if(B) B.style.width='220px'; show(); }
+  };
+  x.onerror = function() { setTimeout(show, 1500); };
+  x.send();
   
-  // 3秒后显示跳过按钮
   setTimeout(function(){ if (!ok && S) S.style.display='block'; }, 3000);
   
   function show() {
