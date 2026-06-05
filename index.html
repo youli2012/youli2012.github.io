@@ -373,13 +373,13 @@ footer .social a:hover{color:#fff}
     <a href="javascript:void(0)" id="musicBtn" style="position:relative;opacity:0.5" onclick="toggleMusic(event)" title="播放音乐">♪</a>
   </div>
 </nav>
-  <!-- 音乐播放器浮层 -->
-  <div id="musicPlayer" style="display:none;position:fixed;top:80px;right:48px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;padding:16px 20px;min-width:140px;z-index:200;box-shadow:0 8px 32px rgba(0,0,0,0.5)">
-    <div style="display:flex;gap:6px">
-      <button onclick="prevTrack()" style="flex:1;padding:8px;background:#111;border:1px solid #222;border-radius:8px;color:#888;cursor:pointer;font-size:14px;transition:all .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">⏮</button>
-      <button id="playPauseBtn" onclick="togglePlay()" style="flex:1;padding:8px;background:#111;border:1px solid #222;border-radius:8px;color:#888;cursor:pointer;font-size:14px;transition:all .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">▶</button>
-      <button onclick="nextTrack()" style="flex:1;padding:8px;background:#111;border:1px solid #222;border-radius:8px;color:#888;cursor:pointer;font-size:14px;transition:all .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">⏭</button>
-      <button onclick="shuffleTrack()" style="flex:1;padding:8px;background:#111;border:1px solid #222;border-radius:8px;color:#888;cursor:pointer;font-size:14px;transition:all .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">🔀</button>
+    <!-- 音乐播放器浮层 -->
+  <div id="musicPlayer" style="display:none;position:fixed;top:80px;right:36px;background:#111;border:1px solid #1a1a1a;border-radius:20px;padding:20px 24px;min-width:160px;z-index:200;box-shadow:0 16px 48px rgba(0,0,0,0.6);opacity:0;transform:translateY(-12px) scale(0.95);transition:opacity 0.4s cubic-bezier(.4,0,.2,1),transform 0.4s cubic-bezier(.4,0,.2,1)">
+    <div style="display:flex;gap:8px;justify-content:center">
+      <button onclick="prevTrack()" style="width:44px;height:44px;border-radius:50%;background:#1a1a1a;border:1px solid #2a2a2a;color:#888;cursor:pointer;font-size:16px;transition:all 0.3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='#2a2a2a';this.style.color='#fff';this.style.transform='scale(1.1)'" onmouseout="this.style.background='#1a1a1a';this.style.color='#888';this.style.transform='scale(1)'">⏮</button>
+      <button id="playPauseBtn" onclick="togglePlay()" style="width:44px;height:44px;border-radius:50%;background:#222;border:1px solid #333;color:#ccc;cursor:pointer;font-size:18px;transition:all 0.3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='#333';this.style.color='#fff';this.style.transform='scale(1.1)'" onmouseout="this.style.background='#222';this.style.color='#ccc';this.style.transform='scale(1)'">▶</button>
+      <button onclick="nextTrack()" style="width:44px;height:44px;border-radius:50%;background:#1a1a1a;border:1px solid #2a2a2a;color:#888;cursor:pointer;font-size:16px;transition:all 0.3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='#2a2a2a';this.style.color='#fff';this.style.transform='scale(1.1)'" onmouseout="this.style.background='#1a1a1a';this.style.color='#888';this.style.transform='scale(1)'">⏭</button>
+      <button onclick="shuffleTrack()" style="width:44px;height:44px;border-radius:50%;background:#1a1a1a;border:1px solid #2a2a2a;color:#888;cursor:pointer;font-size:16px;transition:all 0.3s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:center" onmouseover="this.style.background='#2a2a2a';this.style.color='#fff';this.style.transform='scale(1.1)'" onmouseout="this.style.background='#1a1a1a';this.style.color='#888';this.style.transform='scale(1)'">🔀</button>
     </div>
   </div></nav>
 
@@ -723,7 +723,7 @@ function playTrack(index) {
     audio.src = '';
   }
   
-  audio = new Audio(musicFiles[currentTrack].url);
+  audio = new Audio(musicFiles[currentTrack].url); audio.controls = false;
   audio.controls = false;
   audio.addEventListener('ended', () => nextTrack());
   audio.play().then(() => {
@@ -818,7 +818,7 @@ function playTrack(index) {
     audio.src = '';
   }
   
-  audio = new Audio(musicFiles[currentTrack].url);
+  audio = new Audio(musicFiles[currentTrack].url); audio.controls = false;
   audio.controls = false;
   audio.addEventListener('ended', () => nextTrack());
   audio.play().then(() => {
