@@ -517,6 +517,20 @@ audio { display: none !important; }
 </footer>
 
 <script>
+<script>
+// --- 加载界面 ---
+(function(){
+var L=document.getElementById("loader");var N=document.getElementById("loaderNum");var B=document.querySelector(".loader-line");var T=document.getElementById("clickToStart");var S=document.getElementById("skipBtn");var pct=0,ok=false,blob=null,idx=0;if(!L)return;
+function anim(){pct+=2+Math.floor(Math.random()*3);if(pct>100)pct=100;if(N)N.textContent=pct;if(B)B.style.width=(pct*2.2)+"px";if(pct>=100)show();else setTimeout(anim,25)}anim();
+var songs=[{url:"music/music01.mp3"},{url:"music/music02.mp3"},{url:"music/music03.mp3"},{url:"music/music04.mp3"},{url:"music/music05.mp3"},{url:"music/music06.mp3"},{url:"music/music07.mp3"},{url:"music/music08.mp3"},{url:"music/music09.mp3"},{url:"music/music10.mp3"}];
+idx=Math.floor(Math.random()*songs.length);var x=new XMLHttpRequest();x.open("GET",songs[idx].url,true);x.responseType="blob";
+x.onload=function(){if(x.status==200){blob=x.response}};x.send();
+setTimeout(function(){if(!ok&&S)S.style.display="block"},3000);
+function show(){if(ok)return;ok=true;if(T){T.style.display="block";setTimeout(function(){T.style.opacity="1"},50)}}
+function unlock(){if(L){L.style.transition="opacity 0.6s";L.style.opacity="0";L.style.pointerEvents="none";setTimeout(function(){if(L)L.style.display="none"},600)}if(blob){var u=URL.createObjectURL(blob);window.audio=new Audio(u);window.audio.controls=false;window.audio.play();window.audio.addEventListener("ended",function(){if(typeof nextTrack==="function")nextTrack()});window.isPlaying=true;window.currentTrack=idx}else{playTrack(idx)}var P=document.getElementById("musicPlayer");var Btn=document.getElementById("musicBtn");if(P&&Btn){P.style.display="block";P.style.opacity="0";P.style.transform="translateY(-12px)";setTimeout(function(){P.style.opacity="1";P.style.transform="translateY(0)"},10);Btn.style.opacity="1"}}
+document.addEventListener("click",function(){if(ok||blob)unlock()});document.addEventListener("touchstart",function(){if(ok||blob)unlock()});if(S)S.onclick=unlock;
+})();
+
 // --- 鼠标光晕 ---
 const glow = document.getElementById('glow');
 document.addEventListener('mousemove', e => {
@@ -966,6 +980,9 @@ if ('serviceWorker' in navigator) {
   document.addEventListener('click', function(){ if (ok || blob) unlock(); });
   document.addEventListener('touchstart', function(){ if (ok || blob) unlock(); });
   if (S) S.onclick = unlock;
-})();
+})();
+
 </script>
+</script>
+
 
