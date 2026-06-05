@@ -372,6 +372,15 @@ footer .social a:hover{color:#fff}
     <a href="#contact">联系</a>
   </div>
 </nav>
+  <!-- 音乐播放器浮层 -->
+  <div id="musicPlayer" style="display:none;position:fixed;top:80px;right:48px;background:#0a0a0a;border:1px solid #1a1a1a;border-radius:12px;padding:16px 20px;min-width:140px;z-index:200;box-shadow:0 8px 32px rgba(0,0,0,0.5)">
+    <div style="display:flex;gap:6px">
+      <button onclick="prevTrack()" style="flex:1;padding:8px;background:#111;border:1px solid #222;border-radius:8px;color:#888;cursor:pointer;font-size:14px;transition:all .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">⏮</button>
+      <button id="playPauseBtn" onclick="togglePlay()" style="flex:1;padding:8px;background:#111;border:1px solid #222;border-radius:8px;color:#888;cursor:pointer;font-size:14px;transition:all .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">▶</button>
+      <button onclick="nextTrack()" style="flex:1;padding:8px;background:#111;border:1px solid #222;border-radius:8px;color:#888;cursor:pointer;font-size:14px;transition:all .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">⏭</button>
+      <button onclick="shuffleTrack()" style="flex:1;padding:8px;background:#111;border:1px solid #222;border-radius:8px;color:#888;cursor:pointer;font-size:14px;transition:all .3s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'">🔀</button>
+    </div>
+  </div></nav>
 
 <section class="hero parallax-layer" data-speed="0.03">
   <div class="greeting scroll-reveal">✦ 你好，世界</div>
@@ -787,21 +796,6 @@ musicFiles = [
 ];
 
 // 切换播放器显示
-function toggleMusic(e) {
-  e.preventDefault();
-  const player = document.getElementById('musicPlayer');
-  const btn = document.getElementById('musicBtn');
-  if (player.style.display === 'block') {
-    player.style.display = 'none';
-    btn.style.opacity = '0.5';
-  } else {
-    player.style.display = 'block';
-    btn.style.opacity = '1';
-    // 如果没有音频文件，尝试扫描
-    if (musicFiles.length === 0) scanMusic();
-  }
-}
-
 function closeMusic() {
   document.getElementById('musicPlayer').style.display = 'none';
   document.getElementById('musicBtn').style.opacity = '0.5';
