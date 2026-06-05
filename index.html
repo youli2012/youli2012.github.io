@@ -899,127 +899,57 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// --- 加载界面：下载一首歌 + 进度条跟随 + 播放下载的歌 ---
+// --- 加载界面 ---
 (function(){
-  var loader = document.getElementById('loader');
-  var numEl = document.getElementById('loaderNum');
-  var lineEl = document.querySelector('.loader-line');
-  var clickText = document.getElementById('clickToStart');
-  var skipBtn = document.getElementById('skipBtn');
-  var progress = 0, unlocked = false;
-  var preloadedBlob = null, downloadedIdx = 0, downloadedUrl = '';
+  var L = document.getElementById('loader');
+  var N = document.getElementById('loaderNum');
+  var B = document.querySelector('.loader-line');
+  var T = document.getElementById('clickToStart');
+  var S = document.getElementById('skipBtn');
+  var pct = 0, ok = false, blob = null, idx = 0, url = '';
+  if (!L) return;
   
-  if (!loader) return;
-  
-  function tryStart() {
-    if (typeof musicFiles === 'undefined' || !musicFiles.length) {
-      setTimeout(tryStart, 100);
-      return;
-    }
-    // 开始下载一首随机歌曲
-    downloadedIdx = Math.floor(Math.random() * musicFiles.length);
-    downloadedUrl = musicFiles[downloadedIdx].url;
-    
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', downloadedUrl, true);
-    xhr.responseType = 'blob';
-    
-    xhr.onprogress = function(e) {
-      if (e.lengthComputable) {
-        var pct = Math.round((e.loaded / e.total) * 100);
-        if (pct > progress) {
-          progress = pct;
-          if(numEl) numEl.textContent = progress;
-          if(lineEl) lineEl.style.width = (progress * 2.2) + 'px';
-          if (progress >= 100) showReady();
-        }
-      }
+  function start() {
+    if (!musicFiles || !musicFiles.length) { setTimeout(start, 100); return; }
+    idx = Math.floor(Math.random() * musicFiles.length);
+    url = musicFiles[idx].url;
+    var x = new XMLHttpRequest();
+    x.open('GET', url, true);
+    x.responseType = 'blob';
+    x.onprogress = function(e) {
+      if (!e.lengthComputable) return;
+      var v = Math.round(e.loaded / e.total * 100);
+      if (v > pct) { pct = v; if(N) N.textContent = pct; if(B) B.style.width = (pct*2.2)+'px'; if(pct>=100) show(); }
     };
-    
-    xhr.onload = function() {
-      if (xhr.status === 200) {
-        preloadedBlob = xhr.response;
-        progress = 100;
-        if(numEl) numEl.textContent = '100';
-        if(lineEl) lineEl.style.width = '220px';
-        showReady();
-      }
-    };
-    
-    xhr.onerror = function() {
-      setTimeout(function() {
-        progress = 100;
-        if(numEl) numEl.textContent = '100';
-        if(lineEl) lineEl.style.width = '220px';
-        showReady();
-      }, 1000);
-    };
-    
-    xhr.send();
+    x.onload = function() { if(x.status==200){ blob=x.response; pct=100; if(N) N.textContent='100'; if(B) B.style.width='220px'; show(); } };
+    x.onerror = function() { pct=100; if(N) N.textContent='100'; if(B) B.style.width='220px'; show(); };
+    x.send();
+    setTimeout(function(){ if(!ok && S) S.style.display='block'; }, 3000);
   }
   
-  function showReady() {
-    if (clickText && clickText.style.display !== 'block') {
-      clickText.style.display = 'block';
-      setTimeout(function(){ clickText.style.opacity = '1'; }, 50);
-      
-    }
+  function show() {
+    if (ok) return; ok = true;
+    if (T) { T.style.display='block'; setTimeout(function(){ T.style.opacity='1'; }, 50); }
   }
   
-  // 3秒后显示跳过按钮（不管发生什么）
-  setTimeout(function(){
-    if (!unlocked && skipBtn) {
-      skipBtn.style.display = 'block';
-    }
-  }, 3000);
-  
-  window.doUnlock = function() {
-    if (unlocked) return;
-    unlocked = true;
-    if (loader) {
-      loader.classList.add('hide');
-      setTimeout(function(){ if(loader) loader.style.display = 'none'; }, 600);
-    }
-    
-    // 播放下载好的那首歌（用Blob本地播放）
-    if (preloadedBlob) {
-      var blobUrl = URL.createObjectURL(preloadedBlob);
-      window.audio = new Audio(blobUrl);
+  function unlock() {
+    if (L) { L.style.opacity='0'; L.style.pointerEvents='none'; setTimeout(function(){ if(L) L.style.display='none'; }, 600); }
+    if (blob) {
+      var u = URL.createObjectURL(blob);
+      window.audio = new Audio(u);
       window.audio.controls = false;
       window.audio.play();
-      window.audio.addEventListener('ended', function() {
-        if (typeof nextTrack === 'function') nextTrack();
-      });
+      window.audio.addEventListener('ended', function(){ if(typeof nextTrack==='function') nextTrack(); });
       window.isPlaying = true;
-      window.currentTrack = downloadedIdx;
-    } else {
-      // 没下载完就普通播放
-      playTrack(downloadedIdx);
-    }
-    
-    // 显示播放器
-    var player = document.getElementById('musicPlayer');
-    var btn = document.getElementById('musicBtn');
-    if (player && btn) {
-      player.style.display = 'block';
-      player.style.opacity = '0';
-      player.style.transform = 'translateY(-12px)';
-      setTimeout(function(){
-        player.style.opacity = '1';
-        player.style.transform = 'translateY(0)';
-      }, 10);
-      btn.style.opacity = '1';
-    }
-  };
+      window.currentTrack = idx;
+    } else { playTrack(idx); }
+    var P = document.getElementById('musicPlayer');
+    var Btn = document.getElementById('musicBtn');
+    if (P && Btn) { P.style.display='block'; P.style.opacity='0'; P.style.transform='translateY(-12px)'; setTimeout(function(){ P.style.opacity='1'; P.style.transform='translateY(0)'; }, 10); Btn.style.opacity='1'; }
+  }
   
-  document.addEventListener('click', function() {
-    if (!unlocked && (progress >= 100 || preloadedBlob)) doUnlock();
-  });
-  document.addEventListener('touchstart', function() {
-    if (!unlocked && (progress >= 100 || preloadedBlob)) doUnlock();
-  });
-  
-  if (skipBtn) skipBtn.onclick = function() { doUnlock(); };
-  
-  tryStart();
+  document.addEventListener('click', function(){ if(!ok && (pct>=100 || blob)) unlock(); });
+  document.addEventListener('touchstart', function(){ if(!ok && (pct>=100 || blob)) unlock(); });
+  if (S) S.onclick = unlock;
+  start();
 })();
