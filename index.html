@@ -839,7 +839,12 @@ function playTrack(index) {
     audio.src = '';
   }
   
-  audio = new Audio(musicFiles[currentTrack].url);
+  var songUrl = musicFiles[currentTrack].url;
+  // 如果有Blob缓存就用Blob URL（本地播放，完全不卡）
+  if (window._blobUrls && window._blobUrls[songUrl]) {
+    songUrl = window._blobUrls[songUrl];
+  }
+  audio = new Audio(songUrl);
   audio.controls = false;
   audio.preload = 'auto';
   audio.addEventListener('ended', () => nextTrack());
@@ -902,45 +907,59 @@ if ('serviceWorker' in navigator) {
   var progress = 0;
   var unlocked = false;
   
-  // 下载一首随机歌曲，进度条跟随缓冲进度
-  var preloadedSong = null;
+  // 下载一首随机歌曲，用fetch整首下载到Blob，进度条跟随下载进度
+  var preloadedBlob = null;
+  var preloadedUrl = '';
   var preloadedIdx = 0;
   try {
-    preloadedSong = new Audio();
-    preloadedSong.preload = 'auto';
     preloadedIdx = Math.floor(Math.random() * musicFiles.length);
-    preloadedSong.src = musicFiles[preloadedIdx].url;
-    preloadedSong.load();
-    console.log('⬇️ 加载中预下载:', musicFiles[preloadedIdx].name);
+    preloadedUrl = musicFiles[preloadedIdx].url;
+    console.log('⬇️ 加载中预下载整首:', musicFiles[preloadedIdx].name);
     
-    // 监听缓冲进度更新加载条
-    preloadedSong.addEventListener('progress', function() {
-      if (preloadedSong.buffered && preloadedSong.buffered.length > 0) {
-        var bufferedEnd = preloadedSong.buffered.end(0);
-        var duration = preloadedSong.duration || 30;
-        var pct = Math.min(Math.round((bufferedEnd / duration) * 100), 100);
+    // 用fetch整首下载
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', preloadedUrl, true);
+    xhr.responseType = 'blob';
+    
+    xhr.onprogress = function(e) {
+      if (e.lengthComputable) {
+        var pct = Math.min(Math.round((e.loaded / e.total) * 100), 100);
         if (pct > progress) {
           progress = pct;
           if(numEl) numEl.textContent = progress;
           if(lineEl) lineEl.style.width = (progress * 2.2) + 'px';
-          if (progress >= 100 && clickText) {
-            clickText.style.display = 'block';
-            setTimeout(function() { clickText.style.opacity = '1'; }, 100);
-          }
         }
       }
-    });
+    };
     
-    // 下载完成时确保100%
-    preloadedSong.addEventListener('canplaythrough', function() {
-      progress = 100;
-      if(numEl) numEl.textContent = '100';
-      if(lineEl) lineEl.style.width = '220px';
-      if(clickText) {
-        clickText.style.display = 'block';
-        setTimeout(function() { clickText.style.opacity = '1'; }, 100);
+    xhr.onload = function() {
+      if (xhr.status === 200) {
+        preloadedBlob = xhr.response;
+        progress = 100;
+        if(numEl) numEl.textContent = '100';
+        if(lineEl) lineEl.style.width = '220px';
+        if(clickText) {
+          clickText.style.display = 'block';
+          setTimeout(function() { clickText.style.opacity = '1'; }, 100);
+        }
+        console.log('✅ 整首下载完成:', (preloadedBlob.size / 1024 / 1024).toFixed(1) + 'MB');
       }
-    });
+    };
+    
+    xhr.onerror = function() {
+      console.log('❌ 下载失败，用兜底');
+      setTimeout(function() {
+        progress = 100;
+        if(numEl) numEl.textContent = '100';
+        if(lineEl) lineEl.style.width = '220px';
+        if(clickText) {
+          clickText.style.display = 'block';
+          setTimeout(function() { clickText.style.opacity = '1'; }, 100);
+        }
+      }, 500);
+    };
+    
+    xhr.send();
     
   } catch(e) {}
   
@@ -971,20 +990,14 @@ if ('serviceWorker' in navigator) {
     }
     if (typeof musicFiles !== 'undefined' && musicFiles.length > 0) {
       var randIdx = Math.floor(Math.random() * musicFiles.length);
-      // 如果预下载的歌已经缓冲好了，优先用预下载的
-      if (preloadedSong && preloadedSong.buffered && preloadedSong.buffered.length > 0) {
-        var bufferedEnd = preloadedSong.buffered.end(0);
-        if (bufferedEnd > 5) {
-          // 预下载的歌直接用
-          var songUrl = preloadedSong.src;
-          // 找到这首歌的索引
-          for (var i = 0; i < musicFiles.length; i++) {
-            if (musicFiles[i].url === songUrl || songUrl.indexOf(musicFiles[i].url) > -1) {
-              randIdx = i;
-              break;
-            }
-          }
-        }
+      // 如果整首下载完成了，用Blob URL播放，完全不依赖网络
+      if (preloadedBlob) {
+        var blobUrl = URL.createObjectURL(preloadedBlob);
+        // 暂存到全局，playTrack里优先使用
+        window._blobUrls = window._blobUrls || {};
+        window._blobUrls[preloadedUrl] = blobUrl;
+        // 强制播放这首歌
+        randIdx = preloadedIdx;
       }
       playTrack(randIdx);
       var player = document.getElementById('musicPlayer');
