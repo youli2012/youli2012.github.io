@@ -849,21 +849,20 @@ function shuffleTrack() {
     }
   }
   
-  // 页面加载完成后再加速
-  window.addEventListener('load', () => {
-    // 强制跳到100
+  // 页面加载完成后自动结束加载并播放音乐
+  var _startAutoPlay = function() {
+    if (progress >= 100) return;
     progress = 100;
-    numEl.textContent = '100';
-    if(lineEl) lineEl.style.width = '220px';
-    setTimeout(() => {
-      loader.classList.add('hide');
-      setTimeout(() => {
-        loader.style.display = 'none';
+    if (numEl) numEl.textContent = '100';
+    if (lineEl) lineEl.style.width = '220px';
+    setTimeout(function() {
+      if (loader) loader.classList.add('hide');
+      setTimeout(function() {
+        if (loader) loader.style.display = 'none';
         // 随机播放一首音乐
         if (typeof musicFiles !== 'undefined' && musicFiles.length > 0) {
           var randIdx = Math.floor(Math.random() * musicFiles.length);
           playTrack(randIdx);
-          // 打开播放器显示
           var player = document.getElementById('musicPlayer');
           var btn = document.getElementById('musicBtn');
           if (player && btn) {
@@ -877,7 +876,19 @@ function shuffleTrack() {
         }
       }, 800);
     }, 600);
-  });
+  };
+  
+  // 页面load时自动触发
+  if (document.readyState === 'complete') {
+    setTimeout(_startAutoPlay, 200);
+  } else {
+    window.addEventListener('load', _startAutoPlay);
+  }
+  
+  // 如果5秒后还没load完也强制播放
+  setTimeout(function() {
+    if (progress < 100) _startAutoPlay();
+  }, 5000);
   
   // 开始动画
   setTimeout(updateLoader, 300);
