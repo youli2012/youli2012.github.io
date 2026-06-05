@@ -798,10 +798,9 @@ function playTrack(index) {
   audio.play().then(() => {
     isPlaying = true;
     document.getElementById('playPauseBtn').textContent = '⏸';
-
     document.getElementById('musicBtn').textContent = '♫';
-  }).catch(e => {
-
+  }).catch(function() {
+    // 静默失败，重试机制在外面处理
   });
 }
 
@@ -880,20 +879,18 @@ function shuffleTrack() {
             }, 10);
             btn.style.opacity = '1';
           }
-          // 尝试播放（浏览器可能会阻止自动播放）
-          try {
-            playTrack(randIdx);
-          } catch(e) {}
-          // 如果播放被阻止，等用户点击页面任意位置时播放
-          var _onceClick = function() {
-            document.removeEventListener('click', _onceClick);
-            document.removeEventListener('touchstart', _onceClick);
+          // 直接播放（用各种方式尝试绕过浏览器限制）
+          playTrack(randIdx);
+          // 每隔500ms重试一次，直到成功播放
+          var _retryPlay = setInterval(function() {
             if (audio && audio.paused) {
               audio.play().catch(function(){});
+            } else if (audio && !audio.paused) {
+              clearInterval(_retryPlay);
             }
-          };
-          document.addEventListener('click', _onceClick);
-          document.addEventListener('touchstart', _onceClick);
+          }, 500);
+          // 8秒后停止重试
+          setTimeout(function() { clearInterval(_retryPlay); }, 8000);
         }
       }, 800);
     }, 600);
