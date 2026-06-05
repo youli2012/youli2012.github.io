@@ -909,31 +909,47 @@ if ('serviceWorker' in navigator) {
   var pct = 0, ok = false, blob = null, idx = 0, url = '';
   if (!L) return;
   
-  function start() {
-    if (!musicFiles || !musicFiles.length) { setTimeout(start, 100); return; }
+  // 先显示0%，不要卡在0
+  if (N) N.textContent = '0';
+  if (B) B.style.width = '0px';
+  
+  // 等musicFiles就绪
+  function wait() {
+    if (typeof musicFiles === 'undefined' || !musicFiles || !musicFiles.length) {
+      setTimeout(wait, 200);
+      return;
+    }
     idx = Math.floor(Math.random() * musicFiles.length);
     url = musicFiles[idx].url;
+    
     var x = new XMLHttpRequest();
     x.open('GET', url, true);
     x.responseType = 'blob';
     x.onprogress = function(e) {
-      if (!e.lengthComputable) return;
+      if (!e.lengthComputable || !e.total) return;
       var v = Math.round(e.loaded / e.total * 100);
       if (v > pct) { pct = v; if(N) N.textContent = pct; if(B) B.style.width = (pct*2.2)+'px'; if(pct>=100) show(); }
     };
-    x.onload = function() { if(x.status==200){ blob=x.response; pct=100; if(N) N.textContent='100'; if(B) B.style.width='220px'; show(); } };
-    x.onerror = function() { pct=100; if(N) N.textContent='100'; if(B) B.style.width='220px'; show(); };
+    x.onload = function() {
+      if (x.status==200) { blob=x.response; pct=100; if(N) N.textContent='100'; if(B) B.style.width='220px'; show(); }
+    };
+    x.onerror = function() { setTimeout(show, 1000); };
     x.send();
-    setTimeout(function(){ if(!ok && S) S.style.display='block'; }, 3000);
   }
+  
+  setTimeout(wait, 500);
+  
+  // 3秒后显示跳过按钮
+  setTimeout(function(){ if (!ok && S) S.style.display='block'; }, 3000);
   
   function show() {
     if (ok) return; ok = true;
+    if (pct<100) { pct=100; if(N) N.textContent='100'; if(B) B.style.width='220px'; }
     if (T) { T.style.display='block'; setTimeout(function(){ T.style.opacity='1'; }, 50); }
   }
   
   function unlock() {
-    if (L) { L.style.opacity='0'; L.style.pointerEvents='none'; setTimeout(function(){ if(L) L.style.display='none'; }, 600); }
+    if (L) { L.style.transition='opacity 0.6s'; L.style.opacity='0'; L.style.pointerEvents='none'; setTimeout(function(){ if(L) L.style.display='none'; }, 600); }
     if (blob) {
       var u = URL.createObjectURL(blob);
       window.audio = new Audio(u);
@@ -948,8 +964,7 @@ if ('serviceWorker' in navigator) {
     if (P && Btn) { P.style.display='block'; P.style.opacity='0'; P.style.transform='translateY(-12px)'; setTimeout(function(){ P.style.opacity='1'; P.style.transform='translateY(0)'; }, 10); Btn.style.opacity='1'; }
   }
   
-  document.addEventListener('click', function(){ if(!ok && (pct>=100 || blob)) unlock(); });
-  document.addEventListener('touchstart', function(){ if(!ok && (pct>=100 || blob)) unlock(); });
+  document.addEventListener('click', function(){ if (ok || blob) unlock(); });
+  document.addEventListener('touchstart', function(){ if (ok || blob) unlock(); });
   if (S) S.onclick = unlock;
-  start();
 })();
