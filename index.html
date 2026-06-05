@@ -393,33 +393,10 @@ footer .social a:hover{color:#fff}
 }
 
 
-/* 隐藏所有audio原生控件 */
-audio { display: none !important; }
-    
+
 </style>
 </head>
 <body>
-<div id="loader">
-  <div class="loader-inner">
-    <div class="loader-line"></div>
-    <div class="loader-text">
-      <span class="loader-char" style="--i:0">l</span>
-      <span class="loader-char" style="--i:1">o</span>
-      <span class="loader-char" style="--i:2">a</span>
-      <span class="loader-char" style="--i:3">d</span>
-      <span class="loader-char" style="--i:4">i</span>
-      <span class="loader-char" style="--i:5">n</span>
-      <span class="loader-char" style="--i:6">g</span>
-      <span class="loader-char" style="--i:7">.</span>
-      <span class="loader-char" style="--i:8">.</span>
-      <span class="loader-char" style="--i:9">.</span>
-    </div>
-    <div class="loader-percent"><span id="loaderNum">0</span>%</div>
-  </div>
-</div>
-<!-- 播放器直接放在页面body上，用透明全屏点击层解锁 -->
-<div id="unlockOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:99998;cursor:pointer;background:transparent"></div>
-
 <div class="custom-cursor"></div>
 <div class="custom-cursor-ring"></div>
 <div class="scroll-progress" id="scrollProgress"></div>
