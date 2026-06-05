@@ -7,16 +7,16 @@ self.addEventListener('install', function(e) {
     caches.open(CACHE_NAME).then(function(cache) {
       // 缓存10首音乐
       return cache.addAll([
-        'https://cdn.jsdelivr.net/gh/youli2012/youli2012.github.io@main/music/music01.mp3',
-        'https://cdn.jsdelivr.net/gh/youli2012/youli2012.github.io@main/music/music02.mp3',
-        'https://cdn.jsdelivr.net/gh/youli2012/youli2012.github.io@main/music/music03.mp3',
-        'https://cdn.jsdelivr.net/gh/youli2012/youli2012.github.io@main/music/music04.mp3',
-        'https://cdn.jsdelivr.net/gh/youli2012/youli2012.github.io@main/music/music05.mp3',
-        'https://cdn.jsdelivr.net/gh/youli2012/youli2012.github.io@main/music/music06.mp3',
-        'https://cdn.jsdelivr.net/gh/youli2012/youli2012.github.io@main/music/music07.mp3',
-        'https://cdn.jsdelivr.net/gh/youli2012/youli2012.github.io@main/music/music08.mp3',
-        'https://cdn.jsdelivr.net/gh/youli2012/youli2012.github.io@main/music/music09.mp3',
-        'https://cdn.jsdelivr.net/gh/youli2012/youli2012.github.io@main/music/music10.mp3'
+        ''music/music01.mp3',
+        ''music/music02.mp3',
+        ''music/music03.mp3',
+        ''music/music04.mp3',
+        ''music/music05.mp3',
+        ''music/music06.mp3',
+        ''music/music07.mp3',
+        ''music/music08.mp3',
+        ''music/music09.mp3',
+        ''music/music10.mp3'
       ]);
     })
   );
