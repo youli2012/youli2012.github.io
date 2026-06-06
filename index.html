@@ -869,6 +869,13 @@ musicFiles = [
   { url: 'music/music10.mp3', name: '音乐 10' },
 ];
 
+// 预加载所有音频
+var preloaded=[];
+musicFiles.forEach(function(t,i){
+  var a=new Audio();a.src=t.url;a.preload='auto';a.load();
+  a.addEventListener('canplaythrough',function(){preloaded[i]=a});
+});
+
 // 切换播放器显示（带动画）
 function toggleMusic(e) {
   e.preventDefault();
@@ -911,7 +918,7 @@ function playTrack(index) {
     audio.src = '';
   }
   
-  audio = new Audio(musicFiles[currentTrack].url);
+  audio = preloaded[currentTrack] ? preloaded[currentTrack].cloneNode() : new Audio(musicFiles[currentTrack].url);
   audio.controls = false;
   audio.addEventListener('ended', () => nextTrack());
   audio.play().then(() => {
