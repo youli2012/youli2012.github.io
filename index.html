@@ -869,13 +869,9 @@ musicFiles = [
   { url: 'music/music10.mp3', name: '音乐 10' },
 ];
 
-// 预加载所有音频
-var preloaded=[];
-musicFiles.forEach(function(t,i){
-  var a=new Audio();a.preload='auto';
-  a.addEventListener('loadeddata',function(){preloaded[i]=a});
-  a.addEventListener('error',function(){console.log('preload fail:',t.url)});
-  a.src=t.url;a.load();
+// 预热音频缓存
+musicFiles.forEach(function(t){
+  fetch(t.url).catch(function(){});
 });
 
 // 切换播放器显示（带动画）
@@ -920,13 +916,9 @@ function playTrack(index) {
     audio.src = '';
   }
   
-  if(preloaded[currentTrack]){
-    audio=preloaded[currentTrack];
-    audio.currentTime=0;
-  }else{
-    audio=new Audio(musicFiles[currentTrack].url);
-  }
+  audio=new Audio(musicFiles[currentTrack].url);
   audio.controls = false;
+  audio.preload='auto';
   audio.addEventListener('ended', () => nextTrack());
   audio.play().then(() => {
     isPlaying = true;
