@@ -869,10 +869,7 @@ musicFiles = [
   { url: 'music/music10.mp3', name: '音乐 10' },
 ];
 
-// 预热音频缓存
-musicFiles.forEach(function(t){
-  fetch(t.url).catch(function(){});
-});
+
 
 // 切换播放器显示（带动画）
 function toggleMusic(e) {
@@ -916,9 +913,8 @@ function playTrack(index) {
     audio.src = '';
   }
   
-  audio=new Audio(musicFiles[currentTrack].url);
+  audio = new Audio(musicFiles[currentTrack].url);
   audio.controls = false;
-  audio.preload='auto';
   audio.addEventListener('ended', () => nextTrack());
   audio.play().then(() => {
     isPlaying = true;
